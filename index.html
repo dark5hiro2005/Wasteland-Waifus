@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WASTELAND WAIFUS</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1226">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Waifus">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#120c1a; --bg2:#1a1226; --panel:#241933; --panel2:#2f2140;
+  --border:#4a3663; --border-light:#6b4f8f;
+  --text:#f1e6ff; --text-dim:#b3a3cc;
+  --r:#9c9c9c; --sr:#4da3ff; --ssr:#ffd23f; --ur:#ff4d9d;
+  --gold:#f4c95d; --gem:#6bffe0; --danger:#ff5c5c; --success:#7dffa0;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;}
+html{height:100%; scroll-padding-top:env(safe-area-inset-top,0px);}
+body{
+  height:100%; margin:0; background:var(--bg); color:var(--text);
+  font-family:'VT323', monospace; font-size:20px; line-height:1.3;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+h1,h2,h3,.pix{font-family:'Press Start 2P', monospace;}
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-thumb{background:var(--border-light); border:2px solid var(--bg2);}
+
+header{
+  background:linear-gradient(180deg,var(--panel2),var(--panel));
+  border-bottom:4px solid var(--border-light);
+  padding:10px 12px 10px 12px;
+  padding-top:calc(10px + env(safe-area-inset-top,0px));
+  flex-shrink:0;
+}
+.titlebar{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;}
+.titlebar h1{font-size:14px; color:var(--ur); text-shadow:2px 2px 0 #000; margin:0; letter-spacing:1px;}
+.reset-btn{background:none; border:2px solid var(--border-light); color:var(--text-dim); font-family:'VT323'; font-size:16px; padding:3px 8px; cursor:pointer;}
+.reset-btn:active{background:var(--danger); color:#fff;}
+.stats-row{display:flex; gap:8px; flex-wrap:wrap;}
+.stat-chip{background:var(--panel); border:2px solid var(--border); padding:4px 8px; display:flex; align-items:center; gap:5px; font-size:18px; white-space:nowrap;}
+.stat-chip b{color:var(--text);}
+.stat-chip.gold b{color:var(--gold);}
+.stat-chip.gem b{color:var(--gem);}
+.xpbar-wrap{margin-top:6px; display:flex; gap:10px; flex-wrap:wrap;}
+.xpbar{flex:1; min-width:120px;}
+.xpbar .lbl{font-size:14px; color:var(--text-dim); margin-bottom:2px;}
+.xpbar .track{height:10px; background:#000; border:2px solid var(--border);}
+.xpbar .fill{height:100%; background:var(--success);}
+
+main{flex:1; overflow-y:auto; padding:14px 12px 90px 12px; position:relative;}
+.panel-title{font-size:16px; color:var(--ssr); margin:0 0 4px 0; text-shadow:2px 2px 0 #000;}
+.panel-sub{color:var(--text-dim); font-size:17px; margin:0 0 14px 0;}
+.card{background:var(--panel); border:3px solid var(--border); padding:12px; margin-bottom:12px; position:relative;}
+.row{display:flex; gap:10px; align-items:center;}
+.row.between{justify-content:space-between;}
+.row.wrap{flex-wrap:wrap;}
+.btn{font-family:'Press Start 2P'; font-size:11px; color:#12101a; background:var(--success); border:none; padding:10px 12px; cursor:pointer; box-shadow:3px 3px 0 #000; letter-spacing:0.5px;}
+.btn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 #000;}
+.btn:disabled{background:#4a4a4a; color:#888; cursor:not-allowed; box-shadow:3px 3px 0 #000;}
+.btn.blue{background:var(--sr);}
+.btn.gold{background:var(--ssr);}
+.btn.pink{background:var(--ur); color:#fff;}
+.btn.small{font-size:9px; padding:7px 9px;}
+
+.rtag{font-family:'Press Start 2P'; font-size:9px; padding:3px 6px; display:inline-block; color:#12101a;}
+.rtag.R{background:var(--r);}
+.rtag.SR{background:var(--sr); color:#0a1e33;}
+.rtag.SSR{background:var(--ssr);}
+.rtag.UR{background:var(--ur); color:#fff;}
+.role-badge{font-size:12px; padding:2px 6px; border:1px solid var(--border-light); color:var(--text-dim); margin-left:4px; display:inline-block;}
+.desc-text{font-size:15px; color:var(--text-dim); margin:6px 0; font-style:italic;}
+.cooldown-badge{font-size:14px; color:var(--danger); display:block; margin-top:4px;}
+
+.icon-box{width:56px; height:56px; min-width:56px; background:var(--bg2); border:3px solid var(--border-light); display:flex; align-items:center; justify-content:center; overflow:hidden;}
+.icon-box img{width:100%; height:100%; image-rendering:pixelated; object-fit:contain;}
+.icon-box.R{border-color:var(--r);}
+.icon-box.SR{border-color:var(--sr); box-shadow:0 0 8px #4da3ff88;}
+.icon-box.SSR{border-color:var(--ssr); box-shadow:0 0 10px #ffd23f99;}
+.icon-box.UR{border-color:var(--ur); box-shadow:0 0 14px #ff4d9dcc;}
+
+.bar{height:8px; background:#000; border:2px solid var(--border); margin-top:3px;}
+.bar > div{height:100%; transition:width .4s ease;}
+.bar.hp>div{background:var(--danger);}
+.bar.atk>div{background:#ff9b4d;}
+.bar.def>div{background:var(--sr);}
+
+nav{position:fixed; left:0; right:0; bottom:0; display:flex; background:var(--panel2); border-top:4px solid var(--border-light); padding-bottom:env(safe-area-inset-bottom,0px); z-index:10;}
+nav button{flex:1; background:none; border:none; color:var(--text-dim); font-family:'Press Start 2P'; font-size:9px; padding:12px 2px 10px; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer;}
+nav button .ic{font-size:20px;}
+nav button.active{color:var(--ur); background:var(--panel);}
+
+.gacha-stage{background:radial-gradient(ellipse at center, #3a2456 0%, var(--bg) 75%); border:3px solid var(--border-light); padding:24px 12px; text-align:center; margin-bottom:14px; min-height:150px; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+.reveal-card{animation:pop .35s ease-out;}
+@keyframes pop{0%{transform:scale(0.3); opacity:0;}70%{transform:scale(1.08);}100%{transform:scale(1); opacity:1;}}
+.reveal-icon-wrap{width:84px; height:84px; margin:0 auto 10px auto; display:flex;}
+.reveal-name{font-family:'Press Start 2P'; font-size:13px; margin-bottom:6px;}
+.reveal-quote{color:var(--text-dim); font-style:italic; font-size:18px;}
+.dupe-tag{color:var(--gold); font-size:16px; margin-top:4px;}
+.multi-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:6px;}
+.multi-grid .icon-box{width:100%; height:48px;}
+
+.char-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+@media (min-width:480px){ .char-grid{grid-template-columns:1fr 1fr 1fr;} }
+
+.log-box{background:#000; border:2px solid var(--border); padding:8px 10px; max-height:160px; overflow-y:auto; font-size:16px;}
+.log-box p{margin:2px 0; color:var(--text-dim);}
+.log-box p.win{color:var(--success);}
+.log-box p.lose{color:var(--danger);}
+.log-box p.loot{color:var(--gold);}
+
+.team-slot{width:52px; height:52px; border:2px dashed var(--border-light); display:flex; align-items:center; justify-content:center; background:var(--bg2); cursor:pointer; overflow:hidden;}
+.team-slot img{width:100%;height:100%;image-rendering:pixelated;}
+.pick-list{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
+.pick-chip{border:2px solid var(--border); width:52px; height:52px; cursor:pointer; background:var(--bg2); position:relative; overflow:hidden;}
+.pick-chip img{width:100%;height:100%;image-rendering:pixelated;}
+.pick-chip.selected{border-color:var(--success); box-shadow:0 0 6px var(--success);}
+
+select, .eq-select{font-family:'VT323'; font-size:18px; background:var(--bg2); color:var(--text); border:2px solid var(--border); padding:5px;}
+.badge-lvl{background:var(--bg2); border:1px solid var(--border-light); font-size:14px; padding:1px 5px; color:var(--gold);}
+.effect-line{font-size:16px; color:var(--text-dim); margin:2px 0;}
+.effect-line b{color:var(--success);}
+.divider{border:none; border-top:2px dashed var(--border); margin:12px 0;}
+
+.toast{position:fixed; top:calc(env(safe-area-inset-top,0px) + 8px); left:50%; transform:translateX(-50%); background:var(--panel2); border:2px solid var(--success); color:var(--success); font-size:16px; padding:8px 14px; z-index:50; box-shadow:3px 3px 0 #000; opacity:0; pointer-events:none; transition:opacity .2s;}
+.toast.show{opacity:1;}
+
+/* ---- HAUS 2.5D ---- */
+.house-hint{text-align:center; font-size:14px; color:var(--text-dim); margin-bottom:6px;}
+.house-scene{perspective:700px; height:230px; touch-action:pan-y; margin-bottom:6px;}
+.house-world{position:relative; width:100%; height:100%; transform-style:preserve-3d;}
+.room-cube{position:absolute; left:50%; top:50%; width:104px; height:150px; margin:-95px 0 0 -52px; transform-style:preserve-3d; cursor:pointer;}
+.room-face{width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; background:linear-gradient(180deg,var(--panel2),var(--panel)); border:3px solid var(--border-light); padding:6px;}
+.room-sprite{width:72px; height:72px; image-rendering:pixelated; margin-bottom:4px;}
+.room-name{font-size:8px; text-align:center; color:var(--text); line-height:1.4;}
+.room-lvl{font-size:12px; color:var(--gold); margin-top:2px;}
+.house-controls{display:flex; justify-content:center; gap:14px; margin-top:4px;}
+
+/* ---- MODALS ---- */
+.modal-overlay,.battle-overlay{position:fixed; inset:0; background:rgba(6,3,10,0.88); display:flex; align-items:center; justify-content:center; z-index:150; padding:16px; padding-top:calc(16px + env(safe-area-inset-top,0px)); padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));}
+.battle-overlay{z-index:200;}
+.modal-box,.battle-box{background:var(--panel); border:4px solid var(--border-light); padding:16px; max-width:420px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:6px 6px 0 #000;}
+.modal-close{float:right; background:none; border:2px solid var(--border-light); color:var(--text-dim); font-family:'Press Start 2P'; font-size:10px; padding:4px 7px; cursor:pointer;}
+
+.battle-title{text-align:center; font-size:12px; color:var(--ur); margin-bottom:12px;}
+.battle-arena{display:flex; align-items:flex-start; justify-content:space-between; gap:6px;}
+.battle-side{flex:1; text-align:center;}
+.battle-sprite-wrap{width:76px; height:76px; margin:0 auto; border:3px solid var(--border-light); background:var(--bg2); display:flex; align-items:center; justify-content:center; position:relative;}
+.battle-sprite-wrap img{width:100%; height:100%; image-rendering:pixelated;}
+.battle-vs{font-size:15px; color:var(--danger); padding-top:24px;}
+.battle-label{font-size:13px; color:var(--text-dim); margin-top:4px; min-height:32px;}
+.battle-log{background:#000; border:2px solid var(--border); margin-top:12px; padding:6px 8px; font-size:15px; max-height:110px; overflow-y:auto;}
+.battle-log p{margin:2px 0; color:var(--text-dim);}
+.dmg-float{position:absolute; top:0; left:50%; transform:translateX(-50%); font-family:'Press Start 2P'; font-size:12px; color:var(--danger); animation:floatUp .8s ease-out forwards; pointer-events:none;}
+@keyframes floatUp{0%{opacity:1; top:0;}100%{opacity:0; top:-34px;}}
+.shake{animation:shakeAnim .35s;}
+@keyframes shakeAnim{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
+.flash{animation:flashAnim .3s;}
+@keyframes flashAnim{0%{filter:brightness(3);}100%{filter:brightness(1);}}
+.battle-result{text-align:center; margin-top:12px; font-family:'Press Start 2P'; font-size:13px;}
+.battle-result.win{color:var(--success);}
+.battle-result.lose{color:var(--danger);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="titlebar">
+    <h1>☢ WASTELAND WAIFUS</h1>
+    <div class="row" style="gap:6px;">
+      <button class="reset-btn" id="install-btn" style="border-color:var(--success); color:var(--success);" onclick="handleInstallClick()">📲 App</button>
+      <button class="reset-btn" style="border-color:var(--danger); color:var(--danger);" title="Tu es nicht.">ALT+F4</button>
+      <button class="reset-btn" onclick="hardReset()">Reset</button>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-chip gold">💰 <b id="hud-gold">0</b></div>
+    <div class="stat-chip gem">💎 <b id="hud-gems">0</b></div>
+    <div class="stat-chip">🏠 Basis Lv.<b id="hud-house">1</b></div>
+    <div class="stat-chip">🧟 Du Lv.<b id="hud-player">1</b></div>
+  </div>
+  <div class="xpbar-wrap">
+    <div class="xpbar">
+      <div class="lbl">Überlebens-XP</div>
+      <div class="track"><div class="fill" id="hud-xpbar" style="width:0%"></div></div>
+    </div>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modal-overlay" style="display:none;" onclick="if(event.target===this) closeModal();">
+  <div class="modal-box" id="modal-box"></div>
+</div>
+
+<div class="battle-overlay" id="battle-overlay" style="display:none;">
+  <div class="battle-box" id="battle-box"></div>
+</div>
+
+<nav id="nav"></nav>
+
+<script>
+/* =====================================================================
+   WASTELAND WAIFUS v2 — Prototyp
+   Vanilla JS, ein File, localStorage-Spielstand (pro Gerät).
+   ===================================================================== */
+
+/* ---------------- PRNG / HASH ---------------- */
+function hashStr(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function sleep(ms){ return new Promise(res=>setTimeout(res,ms)); }
+function rand(min,max){ return Math.floor(min+Math.random()*(max-min+1)); }
+
+/* ---------------- SPRITE ENGINE ---------------- */
+const spriteCache = new Map();
+
+/* ================= PIXEL ENGINE v3 — Chibi-Stil mit Outline & Shading ================= */
+function norm(hex){ if(hex.length===4) return '#'+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]; return hex; }
+function shade(hex, amt){
+  const n=parseInt(norm(hex).slice(1),16);
+  let r=(n>>16)+amt, g=((n>>8)&255)+amt, b=(n&255)+amt;
+  r=Math.max(0,Math.min(255,r)); g=Math.max(0,Math.min(255,g)); b=Math.max(0,Math.min(255,b));
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+function darken(hex, f){
+  const n=parseInt(norm(hex).slice(1),16);
+  const r=Math.min(255,Math.round((n>>16)*f)), g=Math.min(255,Math.round(((n>>8)&255)*f*0.95)), b=Math.min(255,Math.round((n&255)*f*1.1));
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+function shaded(base,cx,cy,rx,ry){
+  const hi=shade(base,28), lo=shade(base,-36);
+  return (x,y)=>{ const nx=(x-cx)/rx, ny=(y-cy)/ry; const t=nx*0.55+ny*0.85; if(t>0.5) return lo; if(t<-0.55) return hi; return base; };
+}
+
+class Pix{
+  constructor(w,h){ this.w=w; this.h=h; this.d=new Array(w*h).fill(null); }
+  set(x,y,c){ x=Math.round(x); y=Math.round(y); if(x<0||y<0||x>=this.w||y>=this.h) return; this.d[y*this.w+x]=c; }
+  get(x,y){ x=Math.round(x); y=Math.round(y); if(x<0||y<0||x>=this.w||y>=this.h) return null; return this.d[y*this.w+x]; }
+  rect(x0,y0,x1,y1,c){ for(let y=y0;y<=y1;y++) for(let x=x0;x<=x1;x++) this.set(x,y,typeof c==='function'?c(x,y):c); }
+  ellipse(cx,cy,rx,ry,c){
+    for(let y=Math.floor(cy-ry);y<=Math.ceil(cy+ry);y++) for(let x=Math.floor(cx-rx);x<=Math.ceil(cx+rx);x++){
+      const dx=(x-cx)/rx, dy=(y-cy)/ry;
+      if(dx*dx+dy*dy<=1) this.set(x,y,typeof c==='function'?c(x,y):c);
+    }
+  }
+  line(x0,y0,x1,y1,c,t){
+    x0=Math.round(x0);y0=Math.round(y0);x1=Math.round(x1);y1=Math.round(y1);
+    const dx=Math.abs(x1-x0), dy=Math.abs(y1-y0), sx=x0<x1?1:-1, sy=y0<y1?1:-1; let err=dx-dy;
+    for(let i=0;i<200;i++){
+      this.set(x0,y0,c); if(t>1){ this.set(x0+1,y0,c); if(t>2) this.set(x0,y0+1,c); }
+      if(x0===x1&&y0===y1) break;
+      const e2=2*err; if(e2>-dy){err-=dy;x0+=sx;} if(e2<dx){err+=dx;y0+=sy;}
+    }
+  }
+  outline(f){
+    const add=[]; const nb=[[1,0],[-1,0],[0,1],[0,-1]];
+    for(let y=0;y<this.h;y++) for(let x=0;x<this.w;x++){
+      if(this.d[y*this.w+x]!==null) continue;
+      for(const o of nb){ const c=this.get(x+o[0],y+o[1]); if(c){ add.push([x,y,darken(c,f||0.3)]); break; } }
+    }
+    for(const a of add) this.set(a[0],a[1],a[2]);
+  }
+  toURL(scale,crop){
+    const x0=crop?crop[0]:0, y0=crop?crop[1]:0, x1=crop?crop[2]:this.w, y1=crop?crop[3]:this.h;
+    const canvas=document.createElement('canvas'); canvas.width=(x1-x0)*scale; canvas.height=(y1-y0)*scale;
+    const ctx=canvas.getContext('2d');
+    for(let y=y0;y<y1;y++) for(let x=x0;x<x1;x++){
+      const c=this.d[y*this.w+x]; if(!c) continue;
+      ctx.fillStyle=c; ctx.fillRect((x-x0)*scale,(y-y0)*scale,scale,scale);
+    }
+    return canvas.toDataURL();
+  }
+}
+function sparkle(P,x,y,c){ [[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(o=>{ if(P.get(x+o[0],y+o[1])===null) P.set(x+o[0],y+o[1],c); }); }
+
+const pixCache = new Map();
+const SKIN_TONES=['#ffe0c8','#f5cba7','#e0a878','#c98a5e','#8a5a3c','#f7d6c4'];
+const HAIR_COLORS=['#6ab4ff','#ff8ac8','#b98aff','#ffd86a','#f4f4f8','#3a3a5a','#ff6a5a','#6affc0','#9a6a4a','#2a2a3a','#ff9a4a','#4ad0d0'];
+const EYE_COLORS=['#4d7cff','#ff5c8a','#3acf8a','#ffb03a','#a24dff','#3ad0e0','#ff5c5c'];
+const STOCKINGS=['#f4f0f8','#2a2a3a','#f5cba7','#ff8ac8','#6a6aa8'];
+const ACCENT_COLORS=['#ff6ac8','#ffe34d','#4dfff0','#ff5c5c','#9bff4d','#ffffff'];
+const OUTFIT_SETS={
+  R:[['#5f7a5f','#3f5a3f'],['#7a7a84','#54545e'],['#7a6650','#584838']],
+  SR:[['#3a6aa8','#25467a'],['#3a8a9a','#25606a'],['#5a5aa8','#3a3a7a']],
+  SSR:[['#d0a02a','#8a5a1a'],['#d0602a','#8a3a1a'],['#b08a3a','#6a4a1a']],
+  UR:[['#d03aa0','#7a1a6a'],['#8a3ae0','#4a1a8a'],['#2ac0b0','#1a7a6a']],
+};
+const RARITY_TRIM={R:'#dcdcdc',SR:'#8ad0ff',SSR:'#ffe27a',UR:'#ff9ce9'};
+
+/* ---------- CHIBI-CHARAKTER (32x42) ---------- */
+function drawChibi(def){
+  const seed=def.seed!==undefined?def.seed:hashStr(def.id);
+  const rnd=mulberry32(seed);
+  const pick=(a)=>a[Math.floor(rnd()*a.length)];
+  const role=def.role||'DPS', rar=def.rarity||'R';
+  const skin=pick(SKIN_TONES), hair=pick(HAIR_COLORS), eye=pick(EYE_COLORS), stock=pick(STOCKINGS);
+  const oset=pick(OUTFIT_SETS[rar]||OUTFIT_SETS.R), main=oset[0], sub=oset[1], trim=RARITY_TRIM[rar]||RARITY_TRIM.R;
+  const accCol=pick(ACCENT_COLORS);
+  const hairStyle=Math.floor(rnd()*3);
+  const accPool={DPS:['headband','bow','ears','horns'],Tank:['helm','headband','horns'],Healer:['flower','bow','nurse'],Support:['frill','bow','flower'],Debuffer:['horns','ears','flower']};
+  const acc=pick(accPool[role]||accPool.DPS);
+  const bowX=rnd()<0.5?7:20;
+  const P=new Pix(32,42);
+
+  // 1) hinteres Haar
+  const hs=shaded(hair,16,14,12,11);
+  P.ellipse(16,15,12,11,hs);
+  if(hairStyle===0){ P.rect(5,17,8,25,hs); P.rect(24,17,27,25,hs); }
+  else if(hairStyle===1){ P.rect(4,17,9,35,hs); P.rect(23,17,28,35,hs); P.ellipse(6.5,35,2.5,2,hs); P.ellipse(25.5,35,2.5,2,hs); }
+  else { P.ellipse(4.5,23,3,8,hs); P.ellipse(27.5,23,3,8,hs); P.rect(3,13,6,14,accCol); P.rect(26,13,29,14,accCol); }
+
+  // 2) Beine + Schuhe
+  const legC=shaded(stock,16,36,6,3);
+  P.rect(12,33,14,37,legC); P.rect(18,33,20,37,legC);
+  P.rect(11,38,14,39,'#2a2030'); P.rect(18,38,21,39,'#2a2030');
+  P.set(12,38,'#5a4a6a'); P.set(19,38,'#5a4a6a');
+
+  // 3) Oberkörper je Rolle
+  const metal='#a4aec6';
+  let armC=main;
+  if(role==='Support'){
+    P.rect(11,24,21,30,shaded(main,16,27,6,4));
+    P.rect(13,24,19,24,'#f8f4fa'); P.rect(14,25,18,30,'#f4f0f4'); P.rect(18,25,18,30,'#d8d0dc');
+    P.rect(15,25,17,25,accCol); P.set(16,26,shade(accCol,-50));
+  } else if(role==='Tank'){
+    armC=metal;
+    P.rect(11,24,21,30,shaded(sub,16,27,6,4));
+    P.rect(12,25,20,29,shaded(metal,16,27,5,3));
+    P.rect(15,26,17,28,trim); P.set(16,27,shade(trim,-70));
+    P.ellipse(10,25,2.5,2,metal); P.ellipse(22,25,2.5,2,shade(metal,-25));
+  } else if(role==='Healer'){
+    armC='#f4f0f8';
+    P.rect(11,24,21,30,shaded('#f4f0f8',16,27,6,4));
+    P.rect(13,24,19,24,main);
+    P.rect(16,25,16,28,'#e04a5a'); P.rect(15,26,17,26,'#e04a5a');
+  } else if(role==='Debuffer'){
+    armC='#3a2a4a';
+    P.rect(10,24,22,31,shaded('#3a2a4a',16,27,6,4));
+    P.rect(12,24,20,24,shade('#3a2a4a',26));
+    P.set(16,27,trim); P.set(15,28,trim); P.set(17,28,trim); P.set(16,29,trim);
+  } else {
+    P.rect(11,24,21,30,shaded(main,16,27,6,4));
+    P.rect(16,24,16,30,shade(main,-55)); P.rect(11,29,21,29,trim);
+    P.rect(12,24,14,24,shade(main,34)); P.rect(18,24,20,24,shade(main,34));
+  }
+  // Rock
+  for(let y=30;y<=34;y++){
+    const hw=5+(y-30)*0.8;
+    for(let x=Math.ceil(16-hw);x<=Math.floor(16+hw);x++){
+      P.set(x,y, y===34 ? trim : ((x-16)>hw*0.35 ? shade(sub,-24) : sub));
+    }
+  }
+  // Arme (leicht abgespreizt)
+  P.rect(9,25,10,26,armC); P.rect(8,27,9,28,armC); P.rect(7,29,8,30,skin);
+  const armR=shade(armC,-16);
+  P.rect(22,25,23,26,armR); P.rect(23,27,24,28,armR); P.rect(24,29,25,30,shade(skin,-20));
+
+  // 4) Kopf
+  P.ellipse(16,14,10,9,shaded(skin,16,14,10,9));
+  const tbl=[11,11,11,12,12,12,13,15,15,20,20,20];
+  const bangY=(x)=>{
+    const dx=Math.abs(x-16); let by=tbl[Math.min(dx,11)];
+    if(dx<9 && ((x*7+seed)%4===0)) by+=1;
+    if(x===16) by=10;
+    return by;
+  };
+  for(let x=6;x<=26;x++){ const y=bangY(x)+1; if(P.get(x,y)) P.set(x,y,shade(skin,-30)); }
+  // Augen
+  const eyeRows=['DDDD','IWII','IIPI','IIII','.ii.'];
+  const eyeMap={D:'#2a1a3a',I:eye,W:'#ffffff',P:shade(eye,-85),i:shade(eye,55)};
+  const drawEye=(ex,ey)=>{ eyeRows.forEach((row,ry)=>{ for(let cx=0;cx<4;cx++){ const ch=row[cx]; if(ch==='.') continue; P.set(ex+cx,ey+ry,eyeMap[ch]); } }); };
+  drawEye(10,14); drawEye(19,14);
+  P.rect(8,19,9,19,'#ff9aa8'); P.rect(23,19,24,19,'#ff9aa8');
+  P.set(14,20,'#8a3a4a'); P.set(18,20,'#8a3a4a'); P.rect(15,21,17,21,'#8a3a4a');
+
+  // 5) Frontharen
+  const fh=shaded(hair,16,10,11,10);
+  for(let x=5;x<=27;x++){
+    const by=bangY(x);
+    for(let y=3;y<=by;y++){ const dx=(x-16)/11, dy=(y-14)/10; if(dx*dx+dy*dy<=1) P.set(x,y,fh(x,y)); }
+  }
+  for(let x=7;x<=25;x++){ const by=bangY(x); if((x+seed)%3===0 && by<=16 && P.get(x,by)) P.set(x,by,shade(hair,-48)); }
+  const shine=shade(hair,60);
+  for(let x=9;x<=14;x++) P.set(x,7,shine);
+  P.set(15,8,shine); P.set(21,8,shine); P.set(22,9,shine);
+
+  // 6) Accessoires
+  const bow=(x,y,c)=>{ const d=shade(c,-50), l=shade(c,40); P.rect(x,y,x+1,y+2,c); P.rect(x+3,y,x+4,y+2,c); P.set(x,y,l); P.set(x+3,y,l); P.set(x+2,y+1,d); P.set(x+1,y+3,d); P.set(x+3,y+3,d); };
+  if(acc==='bow') bow(bowX,5,accCol);
+  else if(acc==='flower'){ const fx=bowX===7?7:21; [[1,0],[0,1],[2,1],[1,2]].forEach(o=>P.set(fx+o[0],6+o[1],accCol)); P.set(fx+1,7,'#ffe34d'); }
+  else if(acc==='ears'){
+    const ear=shade(hair,-6);
+    [[9,2,9],[8,3,10],[7,4,11],[7,5,12]].forEach(r=>{ for(let x=r[1];x<=r[2];x++){ P.set(x,r[0]-7+5-3+0,null); } });
+    [[2,9,9],[3,8,10],[4,7,11],[5,7,12]].forEach(r=>{ for(let x=r[1];x<=r[2];x++){ P.set(x,r[0],ear); P.set(32-x,r[0],ear); } });
+    P.set(9,3,'#ffb0c8'); P.set(9,4,'#ffb0c8'); P.set(23,3,'#ffb0c8'); P.set(23,4,'#ffb0c8');
+  }
+  else if(acc==='horns'){
+    const hc='#d04a5a', ht='#ff8a8a';
+    [[1,8,8],[2,8,8],[3,8,9],[4,8,10]].forEach(r=>{ for(let x=r[1];x<=r[2];x++){ P.set(x,r[0],hc); P.set(32-x,r[0],hc); } });
+    P.set(8,1,ht); P.set(24,1,ht);
+  }
+  else if(acc==='headband'){ for(let x=6;x<=26;x++){ if(P.get(x,9)) P.set(x,9,accCol); if(P.get(x,10)) P.set(x,10,shade(accCol,-40)); } P.set(16,9,'#ffffff'); }
+  else if(acc==='helm'){ for(let y=6;y<=8;y++) for(let x=6;x<=26;x++){ if(P.get(x,y)) P.set(x,y,y===6?shade(metal,28):(y===8?shade(metal,-34):metal)); } P.set(10,7,'#ffffff'); P.set(22,7,'#ffffff'); P.rect(15,4,17,5,shade(metal,10)); }
+  else if(acc==='nurse'){ P.rect(11,2,21,5,'#f8f4fa'); P.rect(11,5,21,5,'#d0c8d8'); P.rect(16,2,16,4,'#e04a5a'); P.rect(15,3,17,3,'#e04a5a'); }
+  else if(acc==='frill'){ for(let x=7;x<=25;x++){ if(P.get(x,5)){ P.set(x,5,'#f8f4fa'); if(x%2===0 && P.get(x,4)) P.set(x,4,'#f8f4fa'); if(P.get(x,6)) P.set(x,6,shade(accCol,-10)); } } }
+
+  // 7) Outline + Seltenheits-Glanz
+  P.outline(0.3);
+  if(rar==='UR'){
+    for(let y=0;y<=3;y++) for(let x=7;x<=25;x++){
+      const dx=(x-16)/9, dy=(y-1.6)/1.6, v=dx*dx+dy*dy;
+      if(v>0.55 && v<=1.05 && P.get(x,y)===null) P.set(x,y,y<=1?'#fff2a8':'#ffd23f');
+    }
+  }
+  if(rar!=='R') sparkle(P,3,7,'#ffffff');
+  if(rar==='SSR'||rar==='UR'){ sparkle(P,29,10,'#fff2a8'); sparkle(P,2,31,'#fff2a8'); }
+  if(rar==='UR'){ sparkle(P,30,27,'#ff9ce9'); sparkle(P,28,3,'#ffffff'); sparkle(P,4,38,'#ff9ce9'); }
+  return P;
+}
+function getCharSprite(def, full){
+  const key='c:'+(full?'F':'H')+':'+def.id;
+  if(spriteCache.has(key)) return spriteCache.get(key);
+  let P=pixCache.get('c:'+def.id); if(!P){ P=drawChibi(def); pixCache.set('c:'+def.id,P); }
+  const url=full ? P.toURL(4) : P.toURL(5,[2,0,30,28]);
+  spriteCache.set(key,url); return url;
+}
+let PLAYER_SPRITE=null;
+function getPlayerSprite(){
+  if(PLAYER_SPRITE) return PLAYER_SPRITE;
+  const P=drawChibi({id:'player_hero',rarity:'UR',role:'DPS',seed:hashStr('player_hero_x7')});
+  PLAYER_SPRITE=P.toURL(5,[2,0,30,28]); return PLAYER_SPRITE;
+}
+
+/* ---------- GEGNER (32x42) ---------- */
+const ENEMY_DEFS={
+  'Zombie-Praktikant':{shape:'human',skin:'#8fbf7a',suit:'#4a5a8a',shirt:'#f0f0f0',tie:'#c93a4a',hair:'#3a2a1a',eyes:2,eyeC:'#ffe34d',mouth:'teeth',extras:['wound','badge']},
+  'Mutierter Kopierer':{shape:'box',color:'#b8bcc8',eyes:2,eyeC:'#5aff8a',mouth:'slot',extras:['paper','antenna']},
+  'Radioaktive Kanalratte':{shape:'blob',color:'#8a7a6a',eyes:2,eyeC:'#ff4a4a',mouth:'buck',extras:['ears','tail','glow']},
+  'Ertrunkener Steuerberater':{shape:'human',skin:'#7ab0b0',suit:'#3a4a5a',shirt:'#e8f0f0',tie:'#e0c93a',hair:'#2a6a4a',eyes:2,eyeC:'#ffffff',mouth:'grin',extras:['glasses','seaweed']},
+  'Formular-Golem':{shape:'box',color:'#e8e0c0',eyes:2,eyeC:'#ff4a4a',mouth:'teeth',extras:['stamp','lines']},
+  'Aktenvernichter-Titan':{shape:'box',color:'#5a5a6a',eyes:3,eyeC:'#ff4a4a',mouth:'shred',extras:['gears','antenna']},
+  'Meltdown-Mutant':{shape:'blob',color:'#5adf5a',eyes:3,eyeC:'#ffff6a',mouth:'teeth',extras:['glow','drips','horns']},
+  'Der Endboss-Buchhalter höchstpersönlich':{shape:'human',skin:'#e0c0a0',suit:'#2a2a3a',shirt:'#f4f4f4',tie:'#ffd23f',hair:'#15151a',eyes:2,eyeC:'#ff2a2a',mouth:'grin',extras:['glasses','calc','horns','glow']},
+};
+function enemyEye(P,x,y,c,angry){
+  P.rect(x-1,y-1,x+1,y+1,c); P.set(x,y,'#1a0a0a');
+  if(angry){ if(x<16) P.line(x-2,y-2,x+1,y-1,'#1a0a0a',1); else P.line(x+2,y-2,x-1,y-1,'#1a0a0a',1); }
+}
+function drawEnemyHuman(P,d){
+  const leg=shade(d.suit,-26);
+  P.rect(12,34,14,38,leg); P.rect(18,34,20,38,leg);
+  P.rect(11,39,14,40,'#1a1420'); P.rect(18,39,21,40,'#1a1420');
+  P.rect(10,21,22,34,shaded(d.suit,16,27,7,7));
+  P.rect(14,21,18,25,d.shirt); P.rect(16,22,16,29,d.tie); P.rect(15,22,17,23,shade(d.tie,-25));
+  P.rect(5,22,9,24,d.suit); P.rect(2,22,4,24,d.skin);
+  P.rect(23,22,27,24,shade(d.suit,-20)); P.rect(28,22,30,24,shade(d.skin,-20));
+  P.ellipse(16,12,8,7,shaded(d.skin,16,12,8,7));
+  P.ellipse(16,9,8,4,(x,y)=>y<=8?d.hair:null);
+  for(let x=9;x<=23;x++) if(P.get(x,8)) P.set(x,8,shade(d.hair,-15));
+  enemyEye(P,12,12,d.eyeC,true); enemyEye(P,20,12,d.eyeC,true);
+  if(d.mouth==='grin'){ P.rect(12,16,20,17,'#2a0a12'); P.rect(13,16,19,16,'#ffffff'); }
+  else { P.rect(12,16,20,17,'#2a0a12'); [13,15,17,19].forEach(x=>P.set(x,16,'#f0f0e0')); [14,16,18].forEach(x=>P.set(x,17,'#f0f0e0')); }
+  const ex=d.extras;
+  if(ex.includes('glasses')){ [12,20].forEach(x=>{ for(let dx=-2;dx<=2;dx++) for(let dy=-2;dy<=2;dy++){ if((Math.abs(dx)===2||Math.abs(dy)===2)&&!(Math.abs(dx)===2&&Math.abs(dy)===2)) P.set(x+dx,12+dy,'#e8e8f0'); } }); P.set(15,12,'#e8e8f0'); P.set(16,12,'#e8e8f0'); P.set(17,12,'#e8e8f0'); }
+  if(ex.includes('wound')){ P.rect(8,9,9,10,'#7a1a1a'); P.set(9,11,'#c93a3a'); }
+  if(ex.includes('badge')){ P.rect(19,25,21,27,'#ffffff'); P.set(20,26,'#4a6aff'); }
+  if(ex.includes('seaweed')){ P.line(9,6,7,11,'#2a8a4a',1); P.line(22,6,25,12,'#2a8a4a',1); }
+  if(ex.includes('calc')){ P.rect(26,19,30,26,'#ffd23f'); P.rect(27,20,29,21,'#2a3a2a'); P.set(27,23,'#8a6a1a'); P.set(29,23,'#8a6a1a'); P.set(27,25,'#8a6a1a'); P.set(29,25,'#8a6a1a'); }
+  if(ex.includes('horns')){ [[3,9,9],[4,9,10],[5,8,10]].forEach(r=>{ for(let x=r[1];x<=r[2];x++){ P.set(x,r[0],'#c93a4a'); P.set(32-x,r[0],'#c93a4a'); } }); P.set(9,2,'#ff8a8a'); P.set(23,2,'#ff8a8a'); }
+}
+function drawEnemyBlob(P,d){
+  const c=d.color, ex=d.extras;
+  if(ex.includes('ears')){ P.ellipse(7,16,3,3,shade(c,-10)); P.ellipse(25,16,3,3,shade(c,-25)); P.ellipse(7,16,1.5,1.5,'#ffb0c0'); P.ellipse(25,16,1.5,1.5,'#ffb0c0'); }
+  if(ex.includes('horns')){ [[10,9],[9,9],[8,10],[7,10]].forEach(r=>{ P.set(r[1],r[0],'#f4e8c0'); P.set(32-r[1],r[0],'#f4e8c0'); }); }
+  if(ex.includes('tail')){ P.line(27,32,30,29,shade(c,-30),1); P.line(30,29,30,24,shade(c,-30),1); }
+  P.ellipse(16,26,13,11,shaded(c,16,26,13,11));
+  P.ellipse(16,30,7,5,shade(c,24));
+  P.rect(8,36,12,38,shade(c,-35)); P.rect(20,36,24,38,shade(c,-35));
+  const pos=d.eyes===1?[[16,22]]:(d.eyes===2?[[11,22],[21,22]]:[[10,23],[22,23],[16,19]]);
+  pos.forEach(p=>enemyEye(P,p[0],p[1],d.eyeC,true));
+  if(d.mouth==='buck'){ P.rect(13,28,19,29,'#2a0a12'); P.rect(15,29,17,32,'#f8f8f0'); P.set(16,31,'#c8c8b8'); }
+  else { P.rect(10,28,22,31,'#2a0a12'); for(let x=10;x<=22;x+=2) P.set(x,28,'#f4f4e8'); for(let x=11;x<=21;x+=2) P.set(x,31,'#f4f4e8'); }
+  if(ex.includes('drips')){ P.set(10,37,shade(c,20)); P.set(10,38,shade(c,20)); P.set(22,38,shade(c,20)); P.set(16,38,shade(c,20)); }
+}
+function drawEnemyBox(P,d){
+  const c=d.color, ex=d.extras, dark=shade(c,-45);
+  P.rect(8,35,12,38,dark); P.rect(20,35,24,38,dark);
+  P.rect(2,17,4,27,shade(c,-28)); P.rect(28,17,30,27,shade(c,-28));
+  P.rect(5,10,27,35,shaded(c,16,22,11,13));
+  P.rect(6,11,26,12,shade(c,22));
+  P.rect(8,14,24,24,'#10151a');
+  if(d.eyes===3){ [[11,19],[21,19],[16,16]].forEach(p=>{ P.rect(p[0]-1,p[1]-1,p[0]+1,p[1]+1,d.eyeC); }); }
+  else { P.rect(10,17,13,20,d.eyeC); P.rect(19,17,22,20,d.eyeC); P.set(12,19,'#10151a'); P.set(20,19,'#10151a'); }
+  if(d.mouth==='shred'){ P.rect(8,27,24,32,'#0a0a10'); for(let x=8;x<=24;x+=2){ P.rect(x,27,x,29,'#b8b8c8'); } for(let x=9;x<=23;x+=2){ P.rect(x,30,x,32,'#9898a8'); } }
+  else if(d.mouth==='teeth'){ P.rect(9,27,23,30,'#2a0a12'); for(let x=9;x<=23;x+=2) P.set(x,27,'#f4f4e8'); for(let x=10;x<=22;x+=2) P.set(x,30,'#f4f4e8'); }
+  else { P.rect(9,27,23,29,'#0a0a10'); }
+  if(ex.includes('paper')){ P.rect(11,29,21,34,'#f4f4f0'); P.rect(13,31,19,31,'#b8b8c0'); P.rect(13,33,17,33,'#b8b8c0'); }
+  if(ex.includes('antenna')){ P.rect(15,6,16,9,'#3a3a44'); P.rect(14,3,17,5,'#ff4a4a'); }
+  if(ex.includes('stamp')){ P.ellipse(22,32,3,3,'#c93a3a'); P.ellipse(22,32,1.5,1.5,'#f4c0c0'); }
+  if(ex.includes('lines')){ P.rect(7,30,12,30,shade(c,-45)); P.rect(7,33,11,33,shade(c,-45)); P.rect(7,13,9,13,shade(c,-45)); }
+  if(ex.includes('gears')){ [[7,8],[25,8]].forEach(p=>{ P.ellipse(p[0],p[1],3,3,'#8a8a98'); P.set(p[0],p[1],'#3a3a44'); }); }
+}
+function drawEnemy(name){
+  let d=ENEMY_DEFS[name];
+  if(!d){ const h=hashStr(name); d={shape:'blob',color:['#7a9a5a','#9a5a7a','#5a7a9a'][h%3],eyes:2,eyeC:'#ffe34d',mouth:'teeth',extras:['glow']}; }
+  const P=new Pix(32,42);
+  if(d.shape==='human') drawEnemyHuman(P,d); else if(d.shape==='box') drawEnemyBox(P,d); else drawEnemyBlob(P,d);
+  P.outline(0.28);
+  if(d.extras.includes('glow')){ sparkle(P,3,8,d.eyeC); sparkle(P,29,12,d.eyeC); sparkle(P,2,30,d.eyeC); sparkle(P,30,32,d.eyeC); }
+  return P;
+}
+function getEnemySprite(name){
+  const key='e:'+name;
+  if(spriteCache.has(key)) return spriteCache.get(key);
+  const url=drawEnemy(name).toURL(4);
+  spriteCache.set(key,url); return url;
+}
+
+/* ---------- WAFFEN & RÜSTUNG (24x24) ---------- */
+function drawItem(item){
+  const P=new Pix(24,24);
+  const metal=({R:'#9a9aa8',SR:'#a8d4ff',SSR:'#ffe27a',UR:'#ff9ce9'})[item.rarity]||'#9a9aa8';
+  const dark='#3a3a48', wood='#8a5a2a';
+  const k=item.kind;
+  if(k==='pan'){
+    P.ellipse(9,9,7,7,shaded('#3a3a44',9,9,7,7)); P.ellipse(9,9,5,5,'#5a5a68'); P.ellipse(9,9,3,3,'#4a4a58');
+    P.set(6,6,'#9a9aa8'); P.set(7,6,'#9a9aa8'); P.line(14,14,21,21,wood,2); P.line(15,14,21,20,shade(wood,-30),1);
+  } else if(k==='spork'){
+    P.line(4,20,15,9,metal,2); P.ellipse(17,6,3.5,4.5,shaded(metal,17,6,3.5,4.5));
+    P.set(16,2,null); P.set(16,3,null); P.set(18,2,null); P.set(18,3,null);
+  } else if(k==='gun'){
+    P.rect(9,8,22,10,shaded('#8a8a98',15,9,7,1)); P.rect(9,8,22,8,'#c8c8d8');
+    P.rect(5,9,10,13,'#5a5a68'); P.rect(12,11,17,12,wood); P.rect(2,12,6,16,wood); P.rect(1,15,3,18,shade(wood,-25));
+    P.rect(8,14,8,15,dark); P.rect(9,13,11,13,dark); P.set(22,7,metal);
+  } else if(k==='launcher'){
+    P.rect(3,7,19,13,shaded('#5a6a8a',11,10,8,3)); P.rect(9,7,10,13,metal); P.rect(19,8,21,12,dark);
+    P.rect(21,9,23,11,'#f4f4ec'); P.rect(8,14,10,19,dark); P.ellipse(6,10,1.5,1.5,'#c93a4a');
+  } else if(k==='hammer'){
+    P.rect(4,3,19,10,shaded(metal,11,6,8,4)); P.rect(4,5,4,8,shade(metal,-45)); P.rect(19,5,19,8,shade(metal,-45));
+    P.rect(9,6,14,7,'#c93a4a'); P.rect(11,10,12,21,wood); P.rect(11,17,12,17,dark); P.set(12,20,shade(wood,-30));
+  } else if(k==='blade'){
+    const RB=['#ff5c5c','#ff9a4a','#ffe34d','#5aff8a','#4dc4ff','#a24dff','#ff6ac8'];
+    for(let i=0;i<15;i++){ const x=5+i, y=19-i, c=RB[i%7]; P.set(x,y,c); P.set(x+1,y,shade(c,-25)); P.set(x,y+1,shade(c,-25)); }
+    P.line(3,15,9,21,'#ffe27a',2); P.line(2,22,5,19,dark,2);
+  } else if(k==='box'){
+    P.rect(5,6,18,18,shaded('#b8874a',12,12,7,6)); P.rect(4,5,19,8,'#c89a5a'); P.rect(11,5,12,18,'#e8d4a0');
+    P.rect(7,12,9,13,'#2a1a10'); P.rect(14,12,16,13,'#2a1a10'); P.set(6,15,'#8a6a3a');
+  } else if(k==='helmet'){
+    P.ellipse(12,11,8,8,shaded(metal,12,11,8,8)); P.rect(4,11,20,14,'#2a2a38'); P.rect(6,12,8,12,'#ffffff'); P.rect(15,12,17,12,'#ffffff');
+    P.rect(11,3,13,5,shade(metal,-20)); P.rect(6,17,18,18,shade(metal,-30)); P.set(8,13,'#6ab4ff');
+  } else if(k==='vest'){
+    P.rect(6,4,17,19,shaded(metal,11,11,6,7)); P.rect(3,5,6,9,shade(metal,-20)); P.rect(17,5,20,9,shade(metal,-30));
+    P.rect(10,4,13,6,'#2a2a38'); P.rect(12,7,12,19,shade(metal,-45));
+    for(let y=9;y<=17;y+=3) for(let x=7;x<=16;x+=3){ if(x!==12) P.set(x,y,shade(metal,55)); }
+  } else if(k==='suit'){
+    P.rect(6,4,17,20,shaded('#d8d84a',11,12,6,8)); P.rect(3,5,6,10,'#c8c83a'); P.rect(17,5,20,10,'#b8b82a');
+    P.rect(10,4,13,6,'#2a2a38'); for(let x=6;x<=17;x+=4){ P.rect(x,17,x+1,20,'#2a2a38'); }
+    P.ellipse(12,12,1,1,'#2a2a38'); P.set(12,9,'#2a2a38'); P.set(10,13,'#2a2a38'); P.set(14,13,'#2a2a38'); P.set(11,10,'#2a2a38'); P.set(13,10,'#2a2a38');
+  } else { // plate
+    P.ellipse(12,12,8,9,shaded(metal,12,12,8,9)); P.ellipse(12,12,5,6,shade(metal,-24)); P.rect(11,8,13,16,'#ffffff'); P.rect(8,11,16,13,'#ffffff');
+    P.set(12,12,'#ff5c8a'); P.rect(6,4,8,5,shade(metal,25)); P.rect(16,4,18,5,shade(metal,-25));
+  }
+  P.outline(0.3);
+  return P;
+}
+function getItemSprite(item){
+  const key='i:'+item.id;
+  if(spriteCache.has(key)) return spriteCache.get(key);
+  const url=drawItem(item).toURL(6);
+  spriteCache.set(key,url); return url;
+}
+
+/* ---------- RÄUME (32x30 Diorama) ---------- */
+const ROOM_PALETTES={
+  kitchen:{wall:'#c9a06a',floor:'#7a5030',accent:'#ff9a3a'},
+  bedroom:{wall:'#8a6ac9',floor:'#5a3a6a',accent:'#ff8ac8'},
+  workshop:{wall:'#7a9a5a',floor:'#5a4a3a',accent:'#d2ff4d'},
+  armory:{wall:'#9a5a5a',floor:'#4a3a3a',accent:'#ff5c5c'},
+  lab:{wall:'#4a9a9a',floor:'#3a4a5a',accent:'#4dfff0'},
+};
+function drawRoom(id,tier){
+  const p=ROOM_PALETTES[id]; const P=new Pix(32,30);
+  const wood='#8a5a2a';
+  P.rect(2,3,29,20,shaded(p.wall,16,10,14,9));
+  P.rect(2,21,29,21,shade(p.wall,-45));
+  P.rect(2,22,29,27,p.floor); P.rect(2,24,29,24,shade(p.floor,-25)); P.rect(2,26,29,26,shade(p.floor,-25));
+  [8,14,20,26].forEach(x=>P.rect(x,22,x,23,shade(p.floor,-25)));
+  P.rect(1,2,30,3,tier>=1?'#ffd23f':p.accent);
+  P.rect(23,6,28,13,'#9adcff'); P.rect(25,6,25,13,'#d8f0ff'); P.rect(23,9,28,9,'#d8f0ff'); P.set(24,7,'#ffffff');
+  if(id==='kitchen'){
+    P.rect(6,14,17,21,shaded('#a0a0b0',11,17,6,4)); P.rect(6,14,17,14,'#3a3a44'); P.rect(8,17,9,19,'#2a2a34'); P.rect(12,17,15,19,'#2a2a34');
+    P.rect(9,9,14,13,shaded('#7a7a88',11,11,3,3)); P.rect(8,9,8,10,dark2()); P.rect(15,9,15,10,dark2());
+    P.set(9,8,'#ffb03a'); P.set(12,8,'#ff6a3a'); P.set(11,6,'#e8e8f0'); P.set(12,4,'#e8e8f0'); P.set(11,3,'#d0d0e0');
+    P.rect(20,16,28,16,wood); P.rect(21,14,22,15,'#c93a3a'); P.rect(24,14,25,15,'#e0c93a'); P.rect(27,14,27,15,'#5aaf5a');
+  } else if(id==='bedroom'){
+    P.rect(4,16,22,21,'#8a5a3a'); P.rect(5,13,21,17,'#e8e0f0'); P.rect(9,14,21,19,shaded(p.accent,15,16,6,3));
+    P.rect(5,11,9,15,'#ffffff'); P.rect(5,15,9,15,'#d0d0e0'); P.rect(4,10,4,21,'#6a4020');
+    P.set(24,17,'#ffffff'); P.rect(25,17,27,17,'#ffffff'); P.set(26,18,'#ffffff'); P.rect(24,19,27,19,'#ffffff');
+  } else if(id==='workshop'){
+    P.rect(6,15,20,16,'#8a8a98'); P.rect(8,17,18,19,'#5a5a68'); P.rect(10,20,16,21,dark2()); P.rect(4,17,6,17,'#8a8a98');
+    P.rect(4,9,5,20,wood); P.rect(2,7,8,9,'#a4a4b4');
+    P.ellipse(25,17,3.5,3.5,'#9aa0b0'); P.ellipse(25,17,1.5,1.5,shade(p.wall,-30));
+    P.set(21,17,'#9aa0b0'); P.set(29,17,'#9aa0b0'); P.set(25,13,'#9aa0b0'); P.set(25,21,'#9aa0b0');
+  } else if(id==='armory'){
+    P.rect(4,8,27,9,'#6a4a2a');
+    [7,12,17,22].forEach((x,i)=>{ P.rect(x-1,10,x+1,10,'#ffd23f'); P.line(x,11,x,20,i%2?'#c8c8d8':'#a8d4ff',1); });
+    P.ellipse(26,16,3,4,'#c93a3a'); P.ellipse(26,16,1.5,2,'#ffe27a');
+  } else {
+    P.rect(4,17,27,19,'#5a5a68'); P.rect(6,20,7,21,dark2()); P.rect(24,20,25,21,dark2());
+    P.rect(10,9,11,11,'#c8e8f0'); P.rect(8,12,13,16,'#5aff9a'); P.rect(9,11,12,11,'#5aff9a'); P.set(10,14,'#ffffff');
+    P.rect(16,11,17,12,'#c8e8f0'); P.rect(14,13,19,16,'#ff5ac8'); P.set(16,14,'#ffffff'); P.set(17,8,'#ff5ac8'); P.set(16,6,'#5aff9a');
+    P.rect(21,8,27,14,'#10151a'); P.line(22,12,23,10,'#3adfa8',1); P.line(23,10,25,12,'#3adfa8',1); P.line(25,12,26,9,'#3adfa8',1);
+  }
+  P.outline(0.32);
+  if(tier>=1){ P.rect(1,2,30,2,'#ffd23f'); }
+  if(tier>=2){ sparkle(P,3,5,'#fff2a8'); sparkle(P,28,4,'#fff2a8'); sparkle(P,15,1,'#ffffff'); }
+  return P;
+}
+function dark2(){ return '#3a3a44'; }
+function getRoomSprite(r){
+  const lvl=STATE.rooms[r.id]; const tier=Math.min(2,Math.floor((lvl-1)/5));
+  const key='room:'+r.id+':'+tier;
+  if(spriteCache.has(key)) return spriteCache.get(key);
+  const url=drawRoom(r.id,tier).toURL(5);
+  spriteCache.set(key,url); return url;
+}
+
+/* ---------- MATERIAL-ICONS (16x16) ---------- */
+function drawMaterial(id){
+  const m=MATERIALS[id]; const P=new Pix(16,16); const c=m.color, dk=shade(c,-45);
+  switch(m.shape){
+    case 'drop':
+      for(let y=2;y<=7;y++){ const h=Math.round((y-2)*0.7); P.rect(8-h,y,8+h,y,c); }
+      P.ellipse(8,10,4.5,4.5,shaded(c,8,10,4.5,4.5)); P.set(6,9,'#ffffff'); P.set(6,10,'#d8f0ff'); break;
+    case 'cartridge':
+      P.rect(3,5,12,12,shaded(c,7,8,5,4)); P.rect(4,7,11,9,m.accent||dk); P.rect(5,3,10,4,shade(c,24)); P.rect(6,13,9,14,'#2a2a34'); P.set(5,8,'#ffffff'); break;
+    case 'tooth':
+      P.rect(4,3,11,9,shaded(c,7,6,4,3)); P.rect(4,10,6,14,shade(c,-8)); P.rect(9,10,11,14,shade(c,-22)); P.set(7,10,null); P.set(8,10,null); P.set(7,11,null); P.set(8,11,null); P.set(6,5,'#ffffff'); break;
+    case 'book':
+      P.rect(3,3,12,13,shaded(c,7,8,5,5)); P.rect(3,3,4,13,shade(c,-30)); P.rect(12,4,13,12,'#f4f0e0'); P.rect(6,6,10,8,'#e8d8a8'); P.set(5,14,'#6bc4ff'); P.set(9,14,'#6bc4ff'); break;
+    case 'paper':
+      P.rect(4,2,11,13,shaded(c,7,7,4,5)); P.rect(9,2,11,4,shade(c,-30)); P.rect(5,6,10,6,'#8a8a98'); P.rect(5,8,10,8,'#8a8a98'); P.rect(5,10,8,10,'#8a8a98'); break;
+    case 'strips':
+      for(let i=0;i<5;i++){ P.rect(3+i*2,3+(i%2),3+i*2,11+(i%3),i%2?c:shade(c,-25)); } break;
+    case 'blob':
+      P.ellipse(8,10,6,5,shaded(c,8,10,6,5)); P.ellipse(8,6,3,3,c); P.set(6,9,'#1a2a1a'); P.set(10,9,'#1a2a1a'); P.set(7,7,'#d8ffd8'); P.rect(7,12,9,12,'#1a2a1a'); break;
+    case 'calc':
+      P.rect(3,2,12,14,shaded(c,7,8,5,6)); P.rect(4,3,11,5,'#2a3a2a'); P.set(5,4,'#5aff8a');
+      for(let r=0;r<3;r++) for(let k=0;k<3;k++) P.rect(4+k*3,7+r*2,5+k*3,7+r*2,'#8a6a1a'); break;
+    case 'plate':
+      P.rect(2,5,13,11,shaded(c,7,8,6,3)); P.rect(3,5,12,5,shade(c,44)); [[3,6],[12,6],[3,10],[12,10]].forEach(p=>P.set(p[0],p[1],dk)); break;
+    case 'cloth':
+      P.rect(3,3,12,12,shaded(c,7,7,5,5)); [5,8,11].forEach(y=>P.rect(3,y,12,y,shade(c,-32))); [3,5,7,9,11].forEach(x=>P.set(x,13,c)); break;
+    case 'vial':
+      P.rect(6,4,9,13,'#c8e8f0'); P.rect(6,8,9,13,c); P.rect(6,2,9,3,'#8a5a2a'); P.set(6,5,'#ffffff'); P.set(8,10,'#ffffff'); break;
+    case 'bone':
+      P.rect(4,7,11,8,shaded(c,7,7,4,1)); P.ellipse(4,6,1.5,1.5,c); P.ellipse(4,9,1.5,1.5,c); P.ellipse(11,6,1.5,1.5,c); P.ellipse(11,9,1.5,1.5,c); break;
+    default: // bottle
+      P.ellipse(8,10,4.5,4.5,shaded(c,8,10,4.5,4.5)); P.rect(7,3,8,6,'#c8e8f0'); P.rect(7,2,8,2,'#8a5a2a'); P.rect(6,9,10,11,'#f4f0e0'); P.set(6,8,'#ffffff');
+  }
+  P.outline(0.3);
+  return P;
+}
+function getMaterialSprite(id){
+  const key='m:'+id;
+  if(spriteCache.has(key)) return spriteCache.get(key);
+  const url=drawMaterial(id).toURL(4);
+  spriteCache.set(key,url); return url;
+}
+
+
+/* ---------------- DATA ---------------- */
+
+const RARITY_ORDER = ['R','SR','SSR','UR'];
+const RARITY_RATES = { R:0.45, SR:0.35, SSR:0.15, UR:0.05 };
+const RARITY_VALUE = { R:15, SR:60, SSR:220, UR:800 };
+
+const ROOMS = [
+  { id:'kitchen', name:'Küche', desc:'Kocht fragwürdige Konserven-Mahlzeiten über offenem Reaktorfeuer. Je höher das Level, desto mehr Gold pro Tick.',
+    effectLabel:(lvl)=>`+${lvl*2} 💰 pro Tick`, baseCost:45 },
+  { id:'bedroom', name:'Schlafzimmer', desc:'Wo deine Waifus sich von der Apokalypse erholen — oder zumindest so tun. Erhöht Loot-Menge aus Dungeons.',
+    effectLabel:(lvl)=>`+${lvl*4}% Loot-Menge`, baseCost:60 },
+  { id:'workshop', name:'Werkstatt', desc:'Rost, Schrauben, schwache Erklärungen. Erhöht die Kampfwirkung deiner Ausrüstung.',
+    effectLabel:(lvl)=>`+${lvl*3}% Ausrüstungs-Bonus`, baseCost:65 },
+  { id:'armory', name:'Waffenkammer', desc:'Ein Regal voller schlechter Entscheidungen und ein paar guter Klingen. Erhöht Team-Angriff in Dungeons.',
+    effectLabel:(lvl)=>`+${lvl*3}% Team-ATK`, baseCost:70 },
+  { id:'lab', name:'Labor', desc:'Illegal, instabil, unglaublich profitabel. Generiert Gacha-Gems und verbessert deine SSR/UR-Chance.',
+    effectLabel:(lvl)=>`+${Math.floor(lvl/2)} 💎 pro 3 Ticks, +${lvl}% SSR/UR Chance`, baseCost:110 },
+];
+
+const CHAR_POOL = [
+  { id:'kartoffel_kim', name:'Kartoffel-Kim', klass:'Späherin', role:'Support', rarity:'R',
+    quote:'"Ich hab drei Wurzeln nur mit den Augen töten können. Frag nicht wie."',
+    desc:'Kim war mal Bio-Bäuerin. Jetzt erkennt sie Fallen am Geruch und Gegner am Gang.', atk:8, def:5, hp:40 },
+  { id:'buerokrat_bernd', name:'Bürokrat-Bernd', klass:'Tank', role:'Tank', rarity:'R',
+    quote:'"Formular 27-B ausfüllen, BEVOR du stirbst. Sonst zählt der Tod nicht."',
+    desc:'Bernd hält Schilde wie Aktenordner: stur, schwer und niemand weiß, was wirklich drinsteht.', atk:4, def:12, hp:60 },
+  { id:'praktikantin_petra', name:'Praktikantin Petra', klass:'Heilerin', role:'Healer', rarity:'R',
+    quote:'"Unbezahlt, unterschätzt, unaufhaltsam."',
+    desc:'Petra heilt Wunden mit Klebeband und Prinzipientreue. Beides hält erstaunlich gut.', atk:3, def:6, hp:45 },
+  { id:'timo', name:'Zeitarbeiter-Timo', klass:'Kämpfer', role:'DPS', rarity:'R',
+    quote:'"Mein Vertrag läuft in 4 Stunden ab. Bis dahin: volle Aggression."',
+    desc:'Timo kämpft, als würde jede Schicht die letzte sein. Meistens stimmt das sogar.', atk:10, def:4, hp:38 },
+  { id:'schrott_susi', name:'Schrott-Susi', klass:'Technikerin', role:'Support', rarity:'R',
+    quote:'"Das piept nicht normal. Kämpfen wir trotzdem weiter."',
+    desc:'Susi repariert alles mit Kaugummi und Optimismus. Erfolgsquote: überraschend hoch.', atk:6, def:7, hp:42 },
+  { id:'plasma_paula', name:'Plasma-Paula', klass:'Pyromantin', role:'DPS', rarity:'SR',
+    quote:'"Ich hab kein Anger-Management-Problem. Ich hab ein Flammenwerfer-Talent."',
+    desc:'Paula löst Konflikte grundsätzlich thermisch. Deeskalation ist ihr fremd, Verbrennungen nicht.', atk:22, def:9, hp:70 },
+  { id:'eisige_elvira', name:'Eisige Elvira', klass:'Frostmagierin', role:'Support', rarity:'SR',
+    quote:'"Kälter als dein Ex und doppelt so gefährlich."',
+    desc:'Elvira friert Gegner ein, bevor sie überhaupt merken, dass es ihr Problem ist.', atk:18, def:14, hp:75 },
+  { id:'sniper_steffi', name:'Sniper Steffi', klass:'Scharfschützin', role:'DPS', rarity:'SR',
+    quote:'"Ich treffe dich, bevor du weißt, dass ich dich nicht mag."',
+    desc:'Steffi zählt Geduld in Kilometern. Ihr Zielfernrohr hat schon Ausreden gesehen sterben.', atk:26, def:6, hp:55 },
+  { id:'doc_rotzloeffel', name:'Doc Rotzlöffel', klass:'Feldsanitäterin', role:'Healer', rarity:'SR',
+    quote:'"Heilung kostet extra. Sarkasmus ist kostenlos."',
+    desc:'Ihr Behandlungszimmer ist ein Einkaufswagen. Ihre Erfolgsquote trotzdem beängstigend gut.', atk:12, def:13, hp:80 },
+  { id:'granate_gundula', name:'Granate Gundula', klass:'Sprengmeisterin', role:'DPS', rarity:'SR',
+    quote:'"Subtilität ist für Leute ohne Sprengstoff-Lizenz."',
+    desc:'Gundula plant nie den zweiten Schritt. Der erste ist meistens ohnehin ausreichend laut.', atk:24, def:8, hp:60 },
+  { id:'chaos_charlotte', name:'Chaos-Charlotte', klass:'Berserkerin', role:'DPS', rarity:'SSR',
+    quote:'"Plan A: Wüten. Plan B: existiert nicht."',
+    desc:'Charlotte wurde aus drei Militärprogrammen geworfen — jeweils wegen zu viel Enthusiasmus.', atk:42, def:18, hp:120 },
+  { id:'nullg_nadja', name:'Null-Gravitations-Nadja', klass:'Void-Assassine', role:'DPS', rarity:'SSR',
+    quote:'"Ich verlasse nie den Raum. Der Raum verlässt mich."',
+    desc:'Nadja bewegt sich durch Realitätslücken, die sie selbst nicht ganz versteht. Funktioniert trotzdem.', atk:48, def:14, hp:100 },
+  { id:'reaktor_rita', name:'Reaktor-Rita', klass:'Nuklear-Ingenieurin', role:'Support', rarity:'SSR',
+    quote:'"Halbwertszeit: unbekannt. Geduld: null."',
+    desc:'Rita trägt ihren eigenen kleinen Reaktor mit sich rum. Die Versicherung hat abgelehnt.', atk:38, def:24, hp:130 },
+  { id:'todesdiva_delilah', name:'Todes-Diva Delilah', klass:'Nekromantin', role:'Debuffer', rarity:'SSR',
+    quote:'"Ich rede nicht mit Toten. Ich stelle sie ein."',
+    desc:'Delilah führt Personalgespräche mit Skeletten. Die Fluktuation ist erstaunlich niedrig.', atk:40, def:20, hp:115 },
+  { id:'endboss_brenda', name:'Der Endboss-Buchhalter™ Brenda', klass:'Apokalyptische Wirtschaftsprüferin', role:'Debuffer', rarity:'UR',
+    quote:'"Deine Steuererklärung war der wahre Weltuntergang. Ich bin nur der Bote."',
+    desc:'Brenda hat den Zusammenbruch der Zivilisation als Bilanzposten verbucht. Unter "Sonstiges".', atk:70, def:40, hp:200 },
+  { id:'sarkasmus_sasha', name:'Sarkasmus-Sirene Sasha', klass:'Elite-Plünderin', role:'DPS', rarity:'UR',
+    quote:'"Oh toll, noch ein Held. Wie originell."',
+    desc:'Sasha hat mehr Endbosse gelangweilt als besiegt. Beides zählt in ihrer Statistik.', atk:75, def:32, hp:190 },
+];
+
+const STARTER_CHAR = { id:'rostige_rosie', name:'Rostige Rosie', klass:'Schrottsammlerin', role:'Support', rarity:'R',
+  quote:'"Nur R-Tier, aber wenigstens bin ich gratis. Im Gegensatz zu deiner Therapie."',
+  desc:'Rosie war die Erste, die dich aus den Trümmern gezogen hat. Seitdem lässt sie dich nicht mehr los.', atk:9, def:6, hp:45 };
+
+/* ---- Prozedural generierte zusätzliche Charaktere ---- */
+const ADJ = ["Radioaktive","Durchgeknallte","Zynische","Blutrünstige","Grinsende","Verwahrloste","Elektrisierte","Koffeinsüchtige","Untote","Feuerfeste","Frostige","Explosive","Schrottige","Anarchistische","Verbitterte","Nihilistische","Kaputte","Überdrehte","Wütende","Halluzinierende","Verstrahlte","Insolvente","Mutierte","Zahnlose","Unrasierte"];
+const NAMES = ["Mira","Kessy","Jolene","Ruby","Vex","Nyx","Tessa","Freja","Ingrid","Lola","Marla","Sable","Wren","Zara","Ophelia","Dahlia","Fenja","Ines","Coral","Senna","Vika","Mabel","Cleo","Iris","Faye"];
+const CLASS_DEFS = [
+  {class:'Berserkerin', role:'DPS'}, {class:'Plündererin', role:'DPS'}, {class:'Feldsanitäterin', role:'Healer'},
+  {class:'Schildträgerin', role:'Tank'}, {class:'Scharfschützin', role:'DPS'}, {class:'Technikerin', role:'Support'},
+  {class:'Pyromantin', role:'DPS'}, {class:'Frostmagierin', role:'Support'}, {class:'Nekromantin', role:'Debuffer'},
+  {class:'Sprengmeisterin', role:'DPS'}, {class:'Attentäterin', role:'DPS'}, {class:'Wahrsagerin', role:'Support'},
+  {class:'Biohackerin', role:'Debuffer'}, {class:'Wüstenläuferin', role:'Tank'}, {class:'Cyber-Priesterin', role:'Healer'},
+  {class:'Klingentänzerin', role:'DPS'}, {class:'Schrott-Ingenieurin', role:'Support'}, {class:'Gift-Alchemistin', role:'Debuffer'},
+];
+const QUOTES = [
+  '"Ich hab nicht überlebt, um höflich zu sein."','"Mein Therapeut hat gekündigt. Jetzt rede ich mit Gegnern."','"Ruhe in Stücken."',
+  '"Ich zähl nicht die Toten. Ich zähl die Ausreden."','"Optimismus ist nur schlecht informierte Wut."','"Ich hab zwei Modi: gelangweilt und gefährlich."',
+  '"Nenn mich nicht süß. Nenn mich bewaffnet."','"Manieren sind für Leute mit Zeit."','"Ich verhandle nicht. Ich demontiere."',
+  '"Mein Lebenslauf besteht nur aus Überlebensraten."','"Adrenalin ist mein einziges Abo, das noch läuft."','"Ich lächle, weil die Alternative Papierkram ist."',
+  '"Panik ist für Anfänger."','"Ich sammle keine Trophäen. Ich sammle Ausreden fürs Chaos."','"Mein Aggressionslevel hat eine eigene Postleitzahl."',
+  '"Ich glaub an Schicksal. Meins heißt Explosion."','"Wer braucht Freunde, wenn man Sprengstoff hat."','"Ich bin nicht unhöflich. Ich bin effizient."',
+  '"Der Weltuntergang war mein bester Karrieremove."','"Ich zahl keine Steuern. Ich zahl in Blei."','"Ich lass mich nicht unterbrechen, außer von Explosionen."',
+  '"Mein Motto: Erst schießen, dann eventuell fragen."','"Ich bin kein Morgenmensch. Ich bin kein irgendwann-Mensch."','"Vertrauen ist Verhandlungssache. Meine Waffe nicht."',
+  '"Ich hab aufgehört zu zählen, wie oft ich fast gestorben bin."','"Mein innerer Frieden hat gekündigt."','"Ich bin die Konsequenz schlechter Entscheidungen anderer."',
+  '"Ironischerweise bin ich die vernünftigste hier."','"Ich improvisiere. Meistens mit Sprengstoff."','"Selbstzweifel? Nie gehört."',
+  '"Ich renn nicht weg. Ich verschwinde taktisch... schnell."','"Mein Charme ist tödlich. Buchstäblich."','"Ich bin nicht wütend. Ich bin motiviert."',
+  '"Ich teile nicht. Außer Schaden."','"Meine Geduld ist ein Rundungsfehler."','"Ich glaub nicht an Zufälle, nur an schlechtes Zielen."',
+  '"Ich bin hier für Ruhm, Beute und Chaos - in der Reihenfolge."','"Ich hab kein Ziel. Ich hab eine Zielscheibe."','"Freundlichkeit ist Taktik, keine Persönlichkeit."',
+  '"Ich überlebe nicht aus Trotz. Ich überlebe aus Prinzip."',
+];
+const DESC_TEMPLATES = [
+  'Bevor die Bomben fielen, war {name} angeblich {job}. Jetzt ist sie {classLower} — und deutlich gefährlicher.',
+  '{name} überlebte drei Weltuntergänge und ein schlechtes erstes Date. Nur eines davon hat sie wirklich mitgenommen.',
+  'Niemand weiß genau, woher {name} kommt. Alle wissen, wo sie hinschießt.',
+  '{name} führt Buch über jeden, der sie unterschätzt hat. Das Buch ist ziemlich dick.',
+  'Ausgebildet als {classLower}, spezialisiert auf "es lief nicht wie geplant".',
+  '{name} nennt ihre Fähigkeiten als {classLower} "ein Hobby, das eskaliert ist".',
+  'Man sagt, {name} hat noch nie um Erlaubnis gefragt. Nicht mal sich selbst.',
+  '{name} wurde als {classLower} rekrutiert. Die Rekrutierer bereuen es bis heute.',
+  'Zwischen zwei Kämpfen sammelt {name} Andenken. Meistens Zähne.',
+  '{name} glaubt fest an drei Dinge: Chaos, Beute und schlechte Wortspiele.',
+];
+const JOBS = ["Buchhalterin","Yogalehrerin","Kellnerin","Zahnärztin","Influencerin","Bibliothekarin","Fluglotsin","Klempnerin","Grundschullehrerin","Versicherungsvertreterin"];
+
+function generateExtraCharacters(){
+  const rng = mulberry32(1337);
+  const used = new Set(CHAR_POOL.map(c=>c.name));
+  const combos = [];
+  for(const a of ADJ) for(const n of NAMES) combos.push(a+' '+n);
+  for(let i=combos.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); const tmp=combos[i]; combos[i]=combos[j]; combos[j]=tmp; }
+  const plan = [];
+  for(let i=0;i<16;i++) plan.push('R');
+  for(let i=0;i<16;i++) plan.push('SR');
+  for(let i=0;i<12;i++) plan.push('SSR');
+  for(let i=0;i<6;i++) plan.push('UR');
+  for(let i=plan.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); const tmp=plan[i]; plan[i]=plan[j]; plan[j]=tmp; }
+  const baseStats = { R:{atk:9,def:6,hp:44}, SR:{atk:20,def:11,hp:68}, SSR:{atk:40,def:19,hp:118}, UR:{atk:68,def:34,hp:185} };
+  const out = [];
+  let ci = 0;
+  for(let i=0;i<50;i++){
+    let name = combos[ci++];
+    while(used.has(name) && ci<combos.length) name = combos[ci++];
+    used.add(name);
+    const rarity = plan[i];
+    const cd = CLASS_DEFS[Math.floor(rng()*CLASS_DEFS.length)];
+    const quote = QUOTES[i % QUOTES.length];
+    const tmpl = DESC_TEMPLATES[Math.floor(rng()*DESC_TEMPLATES.length)];
+    const job = JOBS[Math.floor(rng()*JOBS.length)];
+    const shortName = name.split(' ')[1]||name;
+    const desc = tmpl.split('{name}').join(shortName).split('{classLower}').join(cd.class.toLowerCase()).split('{job}').join(job);
+    const base = baseStats[rarity];
+    const variance = 0.85+rng()*0.3;
+    out.push({
+      id:'gen_'+name.toLowerCase().replace(/[^a-z0-9]+/g,'_')+'_'+i,
+      name, klass:cd.class, role:cd.role, rarity, quote, desc,
+      atk:Math.round(base.atk*variance), def:Math.round(base.def*variance), hp:Math.round(base.hp*variance),
+      seed: hashStr(name+i),
+    });
+  }
+  return out;
+}
+const CHAR_POOL_FULL = CHAR_POOL.concat(generateExtraCharacters());
+
+const EQUIPMENT = [
+  { id:'starter_pan', name:'Verbeulte Bratpfanne', type:'weapon', kind:'pan', rarity:'R', bonus:{atk:3}, desc:'Riecht nach Zwiebeln und schlechten Entscheidungen. Trifft trotzdem hart.' },
+  { id:'starter_box', name:'Löchriger Pappkarton-Helm', type:'armor', kind:'helmet', rarity:'R', bonus:{def:2}, desc:'Schützt vor Regen. Vor allem anderen eher symbolisch.' },
+  { id:'spork_doom', name:'Spork des Untergangs', type:'weapon', kind:'spork', rarity:'R', bonus:{atk:5}, desc:'Weder Löffel noch Gabel. Beides gleichzeitig tödlich.' },
+  { id:'bubble_wrap', name:'Luftpolsterfolien-Rüstung', type:'armor', kind:'vest', rarity:'R', bonus:{def:4}, desc:'Macht beim Gehen "Plopp". Der Gegner lacht sich tot — buchstäblich, hoffentlich.' },
+  { id:'shotgun_why', name:"Schrotflinte 'Warum Nicht'", type:'weapon', kind:'gun', rarity:'SR', bonus:{atk:14}, desc:'Beantwortet jede taktische Frage mit einem lauten Knall.' },
+  { id:'tax_launcher', name:'Steuerbescheid-Werfer', type:'weapon', kind:'launcher', rarity:'SR', bonus:{atk:16}, desc:'Verschickt existenzielle Angst in Projektilform.' },
+  { id:'tax_armor', name:'Steuererklärungs-Panzerung', type:'armor', kind:'plate', rarity:'SR', bonus:{def:11}, desc:'Undurchdringlich. Genau wie das Formular, aus dem sie besteht.' },
+  { id:'helmet_regret', name:'Helm des Bedauerns', type:'armor', kind:'helmet', rarity:'SR', bonus:{def:13}, desc:'Flüstert bei jedem Treffer leise "hab ich dir doch gesagt".' },
+  { id:'breaker9000', name:'Bürokratie-Breaker 9000', type:'weapon', kind:'hammer', rarity:'SSR', bonus:{atk:28}, desc:'Durchschlägt Formulare, Schilde und schlechte Ausreden gleichermaßen.' },
+  { id:'nuclear_suit', name:'Recycelter Atommüll-Anzug', type:'armor', kind:'suit', rarity:'SSR', bonus:{def:22}, desc:'Leicht radioaktiv, sehr stylisch. Leuchtet nachts dezent grün.' },
+  { id:'sense_denier', name:'Der Gesunde-Menschenverstand-Verweigerer', type:'weapon', kind:'blade', rarity:'UR', bonus:{atk:48}, desc:'Niemand weiß, wie sie funktioniert. Sie funktioniert einfach — katastrophal gut.' },
+  { id:'audit_plate', name:'Panzerung des ewigen Audits', type:'armor', kind:'plate', rarity:'UR', bonus:{def:38}, desc:'Geschmiedet aus abgelehnten Widersprüchen. Nichts kommt hier durch, nicht mal Argumente.' },
+  /* --- Nur craftbar, nie als Dungeon-Drop --- */
+  { id:'craft_scrap_blade', name:'Schrott-Machete "Amtsschimmel"', type:'weapon', kind:'blade', rarity:'SR', bonus:{atk:18}, craftOnly:true, desc:'Selbst geschmiedet aus dem, was andere weggeworfen haben. Riecht nach Sieg und Tetanus.' },
+  { id:'craft_slime_vest', name:'Schleim-Weste', type:'armor', kind:'vest', rarity:'SR', bonus:{def:15}, craftOnly:true, desc:'Handgenäht aus Kanalschleim und Zähnen. Wasserdicht. Ekelhaft. Effektiv.' },
+  { id:'craft_circuit_gun', name:'Schaltkreis-Kanone', type:'weapon', kind:'gun', rarity:'SSR', bonus:{atk:34}, craftOnly:true, desc:'Gebaut aus durchgebrannten Formular-Golem-Chips. Funktioniert nur, wenn man nicht hinsieht.' },
+  { id:'craft_reactor_suit', name:'Fusionierter Reaktor-Anzug', type:'armor', kind:'suit', rarity:'UR', bonus:{def:42}, craftOnly:true, desc:'Aus Reaktorkern-Splittern verschmolzen. Die Werkstatt hat danach drei Tage geglüht.' },
+];
+
+const DUNGEONS = [
+  { id:'trash_plains', name:'Der Müllplatz der verlorenen Praktikanten', diff:'Leicht', power:35, cooldown:20,
+    desc:'Ein endloses Meer aus Aktenordnern und zerbrochenen Träumen. Guter Einstieg für zarte Gemüter.',
+    enemies:['Zombie-Praktikant','Mutierter Kopierer'], loot:{gold:[10,22], gems:[0,1], equipChance:0.25}, xp:12,
+    materials:['schrott_platte','aktenpapier'] },
+  { id:'sewer_bad_choices', name:'Kanalisation der schlechten Entscheidungen', diff:'Mittel', power:80, cooldown:45,
+    desc:'Riecht nach Reue und abgelaufenen Verträgen. Die Wände sind feucht. Die Gegner feuchter.',
+    enemies:['Radioaktive Kanalratte','Ertrunkener Steuerberater'], loot:{gold:[22,42], gems:[1,2], equipChance:0.35}, xp:22,
+    materials:['rattenzahn','kanalschleim'] },
+  { id:'bunker_7', name:'Bürokratie-Bunker Sektor 7', diff:'Schwer', power:150, cooldown:90,
+    desc:'Sieben Etagen Formulare, bewacht von etwas, das früher mal Personalabteilung war.',
+    enemies:['Formular-Golem','Aktenvernichter-Titan'], loot:{gold:[38,70], gems:[2,3], equipChance:0.5}, xp:38,
+    materials:['formular_tinte','schaltkreis'] },
+  { id:'reactor_core', name:'Reaktorkern des Grauens', diff:'Albtraum', power:260, cooldown:180,
+    desc:'Der heißeste, dümmste, tödlichste Ort der Wasteland. Nur für Teams mit Todeswunsch — oder guter Ausrüstung.',
+    enemies:['Meltdown-Mutant','Der Endboss-Buchhalter höchstpersönlich'], loot:{gold:[65,120], gems:[3,5], equipChance:0.65}, xp:70,
+    materials:['reaktorsplitter','uralt_knochen'] },
+];
+
+/* ---------------- MATERIALIEN & CRAFTING ---------------- */
+const MATERIALS = {
+  schrott_platte:{ name:'Schrottplatte', shape:'plate', color:'#8a8a98', desc:'Verbeultes Blech. Riecht nach Vorbesitzer.' },
+  aktenpapier:{ name:'Aktenpapier-Bündel', shape:'paper', color:'#d8d0b8', desc:'Nie gelesen, immer wichtig getan.' },
+  rattenzahn:{ name:'Rattenzahn', shape:'tooth', color:'#f0e8d0', desc:'Erstaunlich scharf für ein Kanaltier.' },
+  kanalschleim:{ name:'Kanalschleim', shape:'blob', color:'#5a9a4a', desc:'Klebt an allem. Besonders an guten Vorsätzen.' },
+  formular_tinte:{ name:'Formular-Tinte', shape:'vial', color:'#c93a4a', desc:'Amtlich rot. Amtlich gefährlich.' },
+  schaltkreis:{ name:'Durchgebrannter Schaltkreis', shape:'cartridge', color:'#4a8a4a', accent:'#2a3a2a', desc:'Funktioniert nicht mehr — aber sieht wichtig aus.' },
+  reaktorsplitter:{ name:'Reaktorkern-Splitter', shape:'drop', color:'#5aff8a', desc:'Leuchtet sanft. Das ist nicht beruhigend.' },
+  uralt_knochen:{ name:'Uralter Knochen', shape:'bone', color:'#f0e8d0', desc:'Von irgendwas. Fragen zwecklos.' },
+};
+const CRAFT_RECIPES = [
+  { id:'r_scrap_blade', result:'craft_scrap_blade', cost:{gold:35}, mats:{schrott_platte:4, aktenpapier:2},
+    name:'Schrott-Machete schmieden', desc:'Aus Blech und Bürokratie wird eine Klinge, die niemand erwartet hätte.' },
+  { id:'r_slime_vest', result:'craft_slime_vest', cost:{gold:45}, mats:{kanalschleim:3, rattenzahn:3},
+    name:'Schleim-Weste nähen', desc:'Nicht fragen, wie sie zusammenhält. Sie hält.' },
+  { id:'r_circuit_gun', result:'craft_circuit_gun', cost:{gold:90}, mats:{schaltkreis:3, formular_tinte:2},
+    name:'Schaltkreis-Kanone bauen', desc:'Drei Chips, zwei Fläschchen Amtstinte, ein Wunder.' },
+  { id:'r_reactor_suit', result:'craft_reactor_suit', cost:{gold:160}, mats:{reaktorsplitter:3, uralt_knochen:2},
+    name:'Reaktor-Anzug fusionieren', desc:'Die Werkstatt hat danach drei Tage lang geglüht. Trotzdem ausgezeichnete Rüstung.' },
+  { id:'r_refine_circuit', result:null, refine:{schaltkreis:1}, cost:{gold:10}, mats:{schrott_platte:3, aktenpapier:1},
+    name:'Schrott zu Schaltkreis recyceln', desc:'Werkstatt-Trick: aus viel Müll wird ein kleines bisschen Hightech.' },
+];
+
+const COMBAT_QUIPS_WIN = [
+  'hat den Gegner mit einem einzigen enttäuschten Blick erledigt.',
+  'schreit "DAS IST NICHT MEIN PROBLEM" und trifft trotzdem.',
+  'gewinnt, weil der Gegner zuerst die Nerven verliert.',
+  'beendet den Kampf, bevor der Gegner den Vertrag durchgelesen hat.',
+  'wirft ein "GG EZ" in den radioaktiven Wind.',
+];
+const COMBAT_QUIPS_LOSE = [
+  'verliert kurzzeitig das Interesse und wird dafür bestraft.',
+  'stolpert über eine leere Konservendose. Es ist peinlich.',
+  'ruft eine Auszeit aus. Der Gegner hält sich nicht daran.',
+  'verliert Papierkram UND den Kampf.',
+];
+
+/* ---------------- STATE ---------------- */
+
+function freshState(){
+  return {
+    gold:100, gems:8,
+    playerLevel:1, playerXP:0,
+    rooms:{ kitchen:1, bedroom:1, workshop:1, armory:1, lab:1 },
+    roster:[ { iid:'starter', charId:'rostige_rosie', level:1, isStarter:true } ],
+    playerEquip:{ weapon:'starter_pan', armor:'starter_box' },
+    inventory:[
+      { iid:'inv_pan', itemId:'starter_pan', equippedTo:'player' },
+      { iid:'inv_box', itemId:'starter_box', equippedTo:'player' },
+    ],
+    team:['starter'],
+    log:[],
+    dungeonCooldowns:{},
+    materials:{},
+    _iidCounter:1,
+  };
+}
+let STATE = loadState();
+let TAB = 'haus';
+let isAnimating = false;
+let houseRotation = 0;
+let houseDragMoved = false;
+let lastPullResults = null;
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem('wasteland_waifus_save_v2');
+    if(!raw) return freshState();
+    const parsed = JSON.parse(raw);
+    if(!parsed || !parsed.rooms) return freshState();
+    if(!parsed.materials) parsed.materials = {};
+    if(!parsed.dungeonCooldowns) parsed.dungeonCooldowns = {};
+    return parsed;
+  }catch(e){ return freshState(); }
+}
+function saveState(){
+  try{ localStorage.setItem('wasteland_waifus_save_v2', JSON.stringify(STATE)); }catch(e){}
+}
+function hardReset(){
+  if(!confirm('Wirklich alles zurücksetzen? Deine gesamte Sammlung geht flöten.')) return;
+  STATE = freshState(); saveState(); renderAll();
+  toast('Neustart. Willkommen zurück im Elend.');
+}
+
+/* ---------------- APP INSTALLIEREN (PWA) ---------------- */
+let deferredInstallPrompt = null;
+function isStandaloneApp(){ return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone===true; }
+window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); deferredInstallPrompt=e; });
+window.addEventListener('appinstalled', ()=>{
+  deferredInstallPrompt=null;
+  const btn=document.getElementById('install-btn'); if(btn) btn.style.display='none';
+  toast('Installiert! Viel Spaß im Elend.');
+});
+async function handleInstallClick(){
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    try{ await deferredInstallPrompt.userChoice; }catch(e){}
+    deferredInstallPrompt=null;
+    return;
+  }
+  openInstallInstructions();
+}
+function openInstallInstructions(){
+  const ua=navigator.userAgent;
+  const isIOS=/iPhone|iPad|iPod/.test(ua) && !window.MSStream;
+  const isAndroid=/Android/.test(ua);
+  let steps;
+  if(isIOS){
+    steps=`<p class="desc-text">Safari: Tippe unten auf das <b>Teilen-Symbol</b> (Quadrat mit Pfeil nach oben) → <b>"Zum Home-Bildschirm"</b> → "Hinzufügen".</p>`;
+  } else if(isAndroid){
+    steps=`<p class="desc-text">Chrome: Tippe oben rechts auf die <b>drei Punkte</b> ⋮ → <b>"App installieren"</b> (oder "Zum Startbildschirm hinzufügen").</p>`;
+  } else {
+    steps=`<p class="desc-text">Chrome/Edge (Desktop): Klick auf das <b>Installieren-Symbol</b> ⊕ rechts in der Adressleiste — oder Menü ⋮ → <b>"App installieren"</b>.</p>`;
+  }
+  openModal(`
+    <button class="modal-close" onclick="closeModal()">X</button>
+    <div class="pix" style="font-size:13px; margin-bottom:10px; color:var(--success);">📲 APP INSTALLIEREN</div>
+    ${steps}
+    <p class="desc-text">Danach startet Wasteland Waifus wie eine echte App — eigenes Icon, kein Browser-Rahmen. Dein Spielstand bleibt erhalten.</p>
+  `);
+}
+if(isStandaloneApp()){
+  const ib=document.getElementById('install-btn'); if(ib) ib.style.display='none';
+}
+
+/* ---------------- HELPERS ---------------- */
+function charDef(charId){ return charId===STARTER_CHAR.id ? STARTER_CHAR : CHAR_POOL_FULL.find(c=>c.id===charId); }
+function itemDef(itemId){ return EQUIPMENT.find(e=>e.id===itemId); }
+function fmt(n){ return Math.floor(n).toLocaleString('de-DE'); }
+function roomCost(roomId){ const r=ROOMS.find(x=>x.id===roomId); const lvl=STATE.rooms[roomId]; return Math.round(r.baseCost*Math.pow(lvl,1.7)); }
+function houseLevel(){ const total=Object.values(STATE.rooms).reduce((a,b)=>a+b,0); return Math.floor(total/5); }
+function xpForNextPlayerLevel(){ return 30+STATE.playerLevel*20; }
+function formatTime(ms){ const s=Math.max(0,Math.ceil(ms/1000)); const m=Math.floor(s/60); const ss=s%60; return m>0 ? (m+':'+String(ss).padStart(2,'0')) : (s+'s'); }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._h); toast._h=setTimeout(()=>t.classList.remove('show'),2200); }
+function addLog(msg,cls){ STATE.log.unshift({msg,cls}); STATE.log = STATE.log.slice(0,40); }
+
+function memberCombatStats(member){
+  const def = charDef(member.charId);
+  const lvlMul = 1+(member.level-1)*0.12;
+  let atk=def.atk*lvlMul, dEf=def.def*lvlMul, hp=def.hp*lvlMul;
+  const eq = STATE.inventory.find(i=>i.equippedTo===member.iid);
+  if(eq){ const it=itemDef(eq.itemId); if(it.bonus.atk) atk+=it.bonus.atk*workshopMultiplier(); if(it.bonus.def) dEf+=it.bonus.def*workshopMultiplier(); }
+  return {atk,dEf,hp};
+}
+function playerCombatStats(){
+  let atk=10+STATE.playerLevel*2, dEf=8+STATE.playerLevel*1.5, hp=90+STATE.playerLevel*8;
+  const w=itemDef(STATE.playerEquip.weapon), a=itemDef(STATE.playerEquip.armor);
+  if(w) atk += (w.bonus.atk||0)*workshopMultiplier();
+  if(a) dEf += (a.bonus.def||0)*workshopMultiplier();
+  return {atk,dEf,hp};
+}
+function workshopMultiplier(){ return 1+STATE.rooms.workshop*0.03; }
+function armoryMultiplier(){ return 1+STATE.rooms.armory*0.03; }
+function bedroomLootMultiplier(){ return 1+STATE.rooms.bedroom*0.04; }
+function labSsrBonus(){ return STATE.rooms.lab*0.01; }
+
+/* ---------------- TICK ---------------- */
+let tickCounter=0;
+function gameTick(){
+  STATE.gold += STATE.rooms.kitchen*2;
+  tickCounter++;
+  if(tickCounter%3===0){ const g=Math.floor(STATE.rooms.lab/2); if(g>0) STATE.gems+=g; }
+  saveState();
+  if(TAB==='haus') updateHud();
+  updateHud();
+}
+setInterval(gameTick, 5000);
+setInterval(tickCooldownDisplays, 1000);
+function tickCooldownDisplays(){
+  if(TAB!=='dungeon' || isAnimating) return;
+  let anyExpired=false;
+  DUNGEONS.forEach(dg=>{
+    const el=document.getElementById('cd-'+dg.id);
+    if(!el) return;
+    const remain=(STATE.dungeonCooldowns[dg.id]||0)-Date.now();
+    if(remain>0){ el.textContent='Bereit in '+formatTime(remain); }
+    else if(el.dataset.wasCd==='1'){ anyExpired=true; }
+  });
+  if(anyExpired) renderMain();
+}
+
+/* ---------------- GACHA ---------------- */
+function rollRarity(){
+  const bonus=labSsrBonus();
+  const rates={ R:Math.max(0.22,RARITY_RATES.R-bonus*1.2), SR:RARITY_RATES.SR, SSR:RARITY_RATES.SSR+bonus*0.8, UR:RARITY_RATES.UR+bonus*0.4 };
+  const total=Object.values(rates).reduce((a,b)=>a+b,0);
+  let roll=Math.random()*total;
+  for(const r of RARITY_ORDER){ if(roll<rates[r]) return r; roll-=rates[r]; }
+  return 'R';
+}
+function pullOne(){
+  const rarity=rollRarity();
+  const pool=CHAR_POOL_FULL.filter(c=>c.rarity===rarity);
+  const picked=pool[Math.floor(Math.random()*pool.length)];
+  const owned=STATE.roster.find(m=>m.charId===picked.id);
+  if(owned){ const bonusGold=RARITY_VALUE[rarity]; STATE.gold+=bonusGold; return {char:picked,dupe:true,bonusGold}; }
+  const iid='c'+(STATE._iidCounter++);
+  STATE.roster.push({iid,charId:picked.id,level:1});
+  return {char:picked,dupe:false};
+}
+function doPull(count){
+  const cost=count===1?1:9;
+  if(STATE.gems<cost){ toast('Nicht genug Gems, Kumpel. Farm mehr Dungeons.'); return; }
+  STATE.gems-=cost;
+  const results=[];
+  for(let i=0;i<count;i++) results.push(pullOne());
+  saveState();
+  lastPullResults=results;
+  renderMain();
+  updateHud();
+}
+
+/* ---------------- ROOMS ---------------- */
+function upgradeRoom(roomId){
+  const cost=roomCost(roomId);
+  if(STATE.gold<cost){ toast('Zu wenig Gold für den Umbau. Sammle mehr Konservendosen.'); return; }
+  STATE.gold-=cost;
+  STATE.rooms[roomId]++;
+  saveState();
+  toast(ROOMS.find(r=>r.id===roomId).name+' auf Level '+STATE.rooms[roomId]+'!');
+  updateHud();
+  if(document.getElementById('modal-box')) openRoomModal(roomId);
+  renderMain();
+}
+
+/* ---------------- CHAR LEVEL ---------------- */
+function levelUpChar(iid){
+  const m=STATE.roster.find(x=>x.iid===iid);
+  const cost=Math.round(22*Math.pow(m.level,1.6));
+  if(STATE.gold<cost){ toast('Zu wenig Gold zum Trainieren.'); return; }
+  STATE.gold-=cost;
+  m.level++;
+  saveState(); updateHud();
+  toast(charDef(m.charId).name+' ist jetzt Level '+m.level+'!');
+  renderMain();
+}
+
+/* ---------------- TEAM ---------------- */
+function toggleTeam(iid){
+  const idx=STATE.team.indexOf(iid);
+  if(idx>-1) STATE.team.splice(idx,1);
+  else{ if(STATE.team.length>=3){ toast('Team ist voll (max 3). Wirf jemanden raus.'); return; } STATE.team.push(iid); }
+  saveState(); renderMain();
+}
+
+/* ---------------- EQUIP ---------------- */
+function equipItem(iid, target){
+  const item=STATE.inventory.find(i=>i.iid===iid);
+  const def=itemDef(item.itemId);
+  if(target==='player'){
+    const currentId = def.type==='weapon' ? STATE.playerEquip.weapon : STATE.playerEquip.armor;
+    const currentInv = STATE.inventory.find(i=>i.itemId===currentId && i.equippedTo==='player');
+    if(currentInv) currentInv.equippedTo=null;
+    if(def.type==='weapon') STATE.playerEquip.weapon=item.itemId; else STATE.playerEquip.armor=item.itemId;
+    item.equippedTo='player';
+  } else {
+    const currentInv = STATE.inventory.find(i=>i.equippedTo===target && itemDef(i.itemId).type===def.type);
+    if(currentInv) currentInv.equippedTo=null;
+    item.equippedTo=target;
+  }
+  saveState(); renderMain();
+  toast(def.name+' ausgerüstet.');
+}
+/* ---------------- CRAFTING ---------------- */
+function canCraft(r){
+  if(STATE.gold < (r.cost.gold||0)) return false;
+  for(const m in r.mats){ if((STATE.materials[m]||0) < r.mats[m]) return false; }
+  return true;
+}
+function craftRecipe(recipeId){
+  const r = CRAFT_RECIPES.find(x=>x.id===recipeId);
+  if(!canCraft(r)){ toast('Dir fehlen Materialien oder Gold dafür.'); return; }
+  STATE.gold -= (r.cost.gold||0);
+  for(const m in r.mats) STATE.materials[m] -= r.mats[m];
+  if(r.result){
+    const iid='i'+(STATE._iidCounter++);
+    STATE.inventory.push({iid,itemId:r.result,equippedTo:null});
+    toast('Gecraftet: '+itemDef(r.result).name+'!');
+    addLog('Werkstatt: '+itemDef(r.result).name+' hergestellt.', 'loot');
+  } else if(r.refine){
+    for(const m in r.refine) STATE.materials[m]=(STATE.materials[m]||0)+r.refine[m];
+    toast('Materialien verarbeitet!');
+  }
+  saveState(); updateHud(); renderMain();
+}
+
+function equipFromSelect(itemId){
+  const sel=document.getElementById('target-'+itemId);
+  const target=sel.value;
+  const freeInstance=STATE.inventory.find(i=>i.itemId===itemId && !i.equippedTo);
+  if(!freeInstance){ toast('Kein freies Exemplar mehr übrig.'); return; }
+  equipItem(freeInstance.iid, target);
+}
+
+/* ---------------- MODAL SYSTEM ---------------- */
+function openModal(html){ document.getElementById('modal-box').innerHTML=html; document.getElementById('modal-overlay').style.display='flex'; }
+function closeModal(){ document.getElementById('modal-overlay').style.display='none'; }
+
+function openRoomModal(id){
+  const r=ROOMS.find(x=>x.id===id);
+  const lvl=STATE.rooms[id];
+  const cost=roomCost(id);
+  const afford=STATE.gold>=cost;
+  openModal(`
+    <button class="modal-close" onclick="closeModal()">X</button>
+    <div style="text-align:center; margin-bottom:8px;">
+      <img src="${getRoomSprite(r)}" style="width:90px; height:90px; image-rendering:pixelated;">
+      <div class="pix" style="font-size:13px; margin-top:6px;">${r.name} <span class="badge-lvl">Lv.${lvl}</span></div>
+    </div>
+    <p class="desc-text">${r.desc}</p>
+    <p class="effect-line">Aktuell: <b>${r.effectLabel(lvl)}</b></p>
+    <p class="effect-line">Nächstes Level: <b>${r.effectLabel(lvl+1)}</b></p>
+    <div class="row between" style="margin-top:12px;">
+      <span style="font-size:16px;">Ausbau: <b style="color:var(--gold);">${fmt(cost)} 💰</b></span>
+      <button class="btn" ${afford?'':'disabled'} onclick="upgradeRoom('${id}')">AUSBAUEN</button>
+    </div>
+  `);
+}
+
+function openCharModal(iid){
+  const m=STATE.roster.find(x=>x.iid===iid);
+  if(!m) return;
+  const def=charDef(m.charId);
+  const s=memberCombatStats(m);
+  const cost=Math.round(22*Math.pow(m.level,1.6));
+  const eq=STATE.inventory.find(i=>i.equippedTo===iid);
+  openModal(`
+    <button class="modal-close" onclick="closeModal()">X</button>
+    <div style="text-align:center;">
+      <div class="icon-box ${def.rarity}" style="width:96px; height:96px; margin:0 auto 10px auto;"><img src="${getCharSprite(def)}"></div>
+      <div class="pix" style="font-size:13px; color:var(--${def.rarity.toLowerCase()});">${def.name}</div>
+      <span class="rtag ${def.rarity}">${def.rarity}</span>
+      <span class="role-badge">${def.role} · ${def.klass}</span>
+    </div>
+    <p class="desc-text">${def.desc}</p>
+    <p style="color:var(--text-dim); font-style:italic;">${def.quote}</p>
+    <div class="bar hp"><div style="width:${Math.min(100,s.hp/2.2)}%"></div></div>
+    <div class="bar atk"><div style="width:${Math.min(100,s.atk*1.3)}%"></div></div>
+    <div class="bar def"><div style="width:${Math.min(100,s.dEf*2.2)}%"></div></div>
+    <p class="effect-line">ATK ${Math.round(s.atk)} · DEF ${Math.round(s.dEf)} · HP ${Math.round(s.hp)} · Level ${m.level}</p>
+    ${eq?`<p class="effect-line">Ausgerüstet: ${itemDef(eq.itemId).name}</p>`:''}
+    <button class="btn small gold" style="margin-top:10px;" ${STATE.gold<cost?'disabled':''} onclick="levelUpChar('${iid}'); openCharModal('${iid}');">TRAINIEREN (${fmt(cost)}💰)</button>
+  `);
+}
+
+/* ---------------- BATTLE ---------------- */
+function pickTeamActorName(){
+  if(STATE.team.length===0) return 'Du';
+  const iid=STATE.team[Math.floor(Math.random()*STATE.team.length)];
+  const m=STATE.roster.find(x=>x.iid===iid);
+  return m ? charDef(m.charId).name : 'Du';
+}
+function battleLog(msg){
+  const box=document.getElementById('battle-log');
+  if(!box) return;
+  const p=document.createElement('p');
+  p.textContent=msg;
+  box.appendChild(p);
+  box.scrollTop=box.scrollHeight;
+}
+function flashEl(id,cls){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls);
+}
+function showDmg(side, amount){
+  const wrap=document.getElementById('battle-'+side+'-wrap');
+  if(!wrap) return;
+  const d=document.createElement('div');
+  d.className='dmg-float';
+  d.textContent='-'+amount;
+  wrap.appendChild(d);
+  setTimeout(()=>d.remove(),800);
+}
+function updateBattleBars(teamHp, enemyHp){
+  const t=document.getElementById('battle-team-hp'); if(t) t.style.width=Math.max(0,teamHp)+'%';
+  const e=document.getElementById('battle-enemy-hp'); if(e) e.style.width=Math.max(0,enemyHp)+'%';
+}
+
+async function runDungeon(dgId){
+  if(isAnimating) return;
+  const dg=DUNGEONS.find(d=>d.id===dgId);
+  const now=Date.now();
+  if((STATE.dungeonCooldowns[dgId]||0)>now){ toast('Dungeon regeneriert noch. Geduld, Plünderer.'); return; }
+  if(STATE.team.length===0){ toast('Wähl zuerst ein Team im Tab "TEAM" aus!'); return; }
+
+  isAnimating=true;
+
+  let power=playerCombatStats().atk+playerCombatStats().dEf*0.5;
+  STATE.team.forEach(iid=>{
+    const m=STATE.roster.find(x=>x.iid===iid);
+    if(!m) return;
+    const s=memberCombatStats(m);
+    power += (s.atk*armoryMultiplier()+s.dEf*0.5);
+  });
+  const enemyPower = dg.power*(0.85+Math.random()*0.3);
+  const winChance = Math.min(0.92, Math.max(0.10, power/(power+enemyPower)));
+  const win = Math.random()<winChance;
+  const enemyName = dg.enemies[Math.floor(Math.random()*dg.enemies.length)];
+
+  const teamIconChar = charDef(STATE.roster.find(x=>x.iid===STATE.team[0]).charId);
+
+  document.getElementById('battle-box').innerHTML = `
+    <div class="battle-title">${dg.name}</div>
+    <div class="battle-arena">
+      <div class="battle-side">
+        <div class="battle-sprite-wrap" id="battle-team-wrap"><img id="battle-team-sprite" src="${getCharSprite(teamIconChar)}"></div>
+        <div class="bar hp"><div id="battle-team-hp" style="width:100%"></div></div>
+        <div class="battle-label">Dein Team</div>
+      </div>
+      <div class="battle-vs pix">VS</div>
+      <div class="battle-side">
+        <div class="battle-sprite-wrap" id="battle-enemy-wrap"><img id="battle-enemy-sprite" src="${getEnemySprite(enemyName)}"></div>
+        <div class="bar hp"><div id="battle-enemy-hp" style="width:100%"></div></div>
+        <div class="battle-label">${enemyName}</div>
+      </div>
+    </div>
+    <div class="battle-log" id="battle-log"></div>
+    <div id="battle-result"></div>
+    <button class="btn" id="battle-continue" style="display:none; margin-top:12px; width:100%;" onclick="closeBattleModal()">WEITER</button>
+  `;
+  document.getElementById('battle-overlay').style.display='flex';
+
+  battleLog('Ein wilder '+enemyName+' erscheint. Er sieht unangemessen selbstbewusst aus.');
+  await sleep(600);
+
+  let teamHp=100, enemyHp=100;
+  const rounds=4;
+  for(let r=0;r<rounds;r++){
+    await sleep(600);
+    const teamDmg = win ? rand(14,28) : rand(6,14);
+    enemyHp = Math.max(0, enemyHp-teamDmg);
+    flashEl('battle-enemy-sprite','flash'); flashEl('battle-enemy-wrap','shake'); showDmg('enemy', teamDmg);
+    updateBattleBars(teamHp, enemyHp);
+    battleLog(pickTeamActorName()+' trifft '+enemyName+' für '+teamDmg+'.');
+    await sleep(550);
+    if(enemyHp<=0) break;
+
+    const enemyDmg = win ? rand(6,16) : rand(16,30);
+    teamHp = Math.max(0, teamHp-enemyDmg);
+    flashEl('battle-team-sprite','flash'); flashEl('battle-team-wrap','shake'); showDmg('team', enemyDmg);
+    updateBattleBars(teamHp, enemyHp);
+    battleLog(enemyName+' schlägt zurück für '+enemyDmg+'.');
+    if(teamHp<=0) break;
+  }
+  if(win){ enemyHp=0; if(teamHp<=0) teamHp=18; } else { teamHp=0; if(enemyHp<=0) enemyHp=22; }
+  updateBattleBars(teamHp, enemyHp);
+  await sleep(450);
+
+  const resultBox=document.getElementById('battle-result');
+  STATE.dungeonCooldowns[dgId] = Date.now()+dg.cooldown*1000;
+
+  if(win){
+    const quip=COMBAT_QUIPS_WIN[Math.floor(Math.random()*COMBAT_QUIPS_WIN.length)];
+    battleLog(pickTeamActorName()+' '+quip);
+    const goldGain=Math.round((dg.loot.gold[0]+Math.random()*(dg.loot.gold[1]-dg.loot.gold[0]))*bedroomLootMultiplier());
+    const gemGain=Math.round(dg.loot.gems[0]+Math.random()*(dg.loot.gems[1]-dg.loot.gems[0]));
+    STATE.gold+=goldGain; STATE.gems+=gemGain;
+    battleLog('Beute geborgen: +'+goldGain+' 💰'+(gemGain>0?', +'+gemGain+' 💎':''));
+    addLog('Sieg in '+dg.name+'! +'+goldGain+' 💰'+(gemGain>0?', +'+gemGain+' 💎':''), 'win');
+
+    STATE.playerXP+=dg.xp;
+    let levelUpMsg='';
+    if(STATE.playerXP>=xpForNextPlayerLevel()){
+      STATE.playerXP-=xpForNextPlayerLevel();
+      STATE.playerLevel++;
+      levelUpMsg='Du erreichst Level '+STATE.playerLevel+'! Der Wahnsinn wächst mit dir.';
+      battleLog(levelUpMsg);
+      addLog(levelUpMsg,'win');
+    }
+
+    let dropMsg='';
+    if(Math.random()<dg.loot.equipChance){
+      const weights = dg.id==='reactor_core' ? {R:0.15,SR:0.35,SSR:0.35,UR:0.15}
+        : dg.id==='bunker_7' ? {R:0.25,SR:0.4,SSR:0.3,UR:0.05}
+        : dg.id==='sewer_bad_choices' ? {R:0.45,SR:0.42,SSR:0.13,UR:0}
+        : {R:0.7,SR:0.28,SSR:0.02,UR:0};
+      let roll=Math.random(), rarity='R', acc=0;
+      for(const rk of RARITY_ORDER){ acc+=weights[rk]||0; if(roll<=acc){ rarity=rk; break; } }
+      const pool=EQUIPMENT.filter(e=>e.rarity===rarity && !e.craftOnly);
+      const drop=pool[Math.floor(Math.random()*pool.length)];
+      const iid='i'+(STATE._iidCounter++);
+      STATE.inventory.push({iid,itemId:drop.id,equippedTo:null});
+      dropMsg='Drop: '+drop.name+' ['+rarity+']';
+      battleLog(dropMsg);
+      addLog(dropMsg,'loot');
+    }
+    const matDrops=[];
+    (dg.materials||[]).forEach(matId=>{
+      if(Math.random()<0.7){
+        const qty=rand(1,3);
+        STATE.materials[matId]=(STATE.materials[matId]||0)+qty;
+        matDrops.push('+'+qty+' '+MATERIALS[matId].name);
+      }
+    });
+    if(matDrops.length){
+      const matMsg='Material geborgen: '+matDrops.join(', ');
+      battleLog(matMsg);
+      addLog(matMsg,'loot');
+    }
+    resultBox.innerHTML = `<div class="battle-result win">SIEG!</div>`;
+  } else {
+    const quip=COMBAT_QUIPS_LOSE[Math.floor(Math.random()*COMBAT_QUIPS_LOSE.length)];
+    battleLog(pickTeamActorName()+' '+quip);
+    const consolation=Math.round(dg.loot.gold[0]*0.25);
+    STATE.gold+=consolation;
+    battleLog('Ihr flieht mit '+consolation+' 💰 Trostgold und eurer Würde (teilweise).');
+    addLog('Niederlage in '+dg.name+'. +'+consolation+' 💰 Trostgold.', 'lose');
+    resultBox.innerHTML = `<div class="battle-result lose">NIEDERLAGE</div>`;
+  }
+
+  document.getElementById('battle-continue').style.display='block';
+  saveState();
+  updateHud();
+  isAnimating=false;
+}
+function closeBattleModal(){
+  document.getElementById('battle-overlay').style.display='none';
+  renderMain();
+}
+
+/* ---------------- HOUSE 2.5D DRAG ---------------- */
+function applyHouseRotation(){ const w=document.getElementById('house-world'); if(w) w.style.transform='rotateY('+houseRotation+'deg)'; }
+function rotateHouse(dir){ houseRotation += dir*72; applyHouseRotation(); }
+function handleRoomClick(id){ if(houseDragMoved) return; openRoomModal(id); }
+function initHouseDrag(){
+  const scene=document.getElementById('house-scene');
+  if(!scene) return;
+  let dragging=false, lastX=0;
+  scene.onpointerdown=(e)=>{ dragging=true; lastX=e.clientX; houseDragMoved=false; try{scene.setPointerCapture(e.pointerId);}catch(err){} };
+  scene.onpointermove=(e)=>{ if(!dragging) return; const dx=e.clientX-lastX; if(Math.abs(dx)>3) houseDragMoved=true; lastX=e.clientX; houseRotation+=dx*0.5; applyHouseRotation(); };
+  scene.onpointerup=()=>{ dragging=false; };
+  scene.onpointercancel=()=>{ dragging=false; };
+  applyHouseRotation();
+}
+
+/* ==================================================================== RENDERING ==================================================================== */
+
+const TABS = [
+  {id:'haus', label:'HAUS', icon:'🏠'}, {id:'gacha', label:'GACHA', icon:'🎰'}, {id:'dungeon', label:'DUNGEON', icon:'☣️'},
+  {id:'inventar', label:'INVENTAR', icon:'🎒'}, {id:'charaktere', label:'TEAM', icon:'👥'},
+];
+function renderNav(){
+  document.getElementById('nav').innerHTML = TABS.map(t=>`<button class="${TAB===t.id?'active':''}" onclick="switchTab('${t.id}')"><span class="ic">${t.icon}</span>${t.label}</button>`).join('');
+}
+function switchTab(id){ TAB=id; if(id!=='gacha') lastPullResults=null; renderAll(); window.scrollTo(0,0); }
+
+function updateHud(){
+  document.getElementById('hud-gold').textContent=fmt(STATE.gold);
+  document.getElementById('hud-gems').textContent=fmt(STATE.gems);
+  document.getElementById('hud-house').textContent=houseLevel()+1;
+  document.getElementById('hud-player').textContent=STATE.playerLevel;
+  const pct=Math.min(100,Math.round(100*STATE.playerXP/xpForNextPlayerLevel()));
+  document.getElementById('hud-xpbar').style.width=pct+'%';
+}
+function renderAll(){ renderNav(); renderMain(); updateHud(); }
+function renderMain(){
+  const el=document.getElementById('main');
+  if(TAB==='haus'){ el.innerHTML=viewHaus(); setTimeout(initHouseDrag,0); }
+  else if(TAB==='gacha') el.innerHTML=viewGacha();
+  else if(TAB==='dungeon') el.innerHTML=viewDungeon();
+  else if(TAB==='inventar') el.innerHTML=viewInventar();
+  else if(TAB==='charaktere') el.innerHTML=viewCharaktere();
+}
+
+/* ---- HAUS ---- */
+function viewHaus(){
+  const total=Object.values(STATE.rooms).reduce((a,b)=>a+b,0);
+  const n=ROOMS.length;
+  return `
+    <h2 class="panel-title">🏠 Deine ruhmreiche Bruchbude</h2>
+    <p class="panel-sub">Basis-Level ${houseLevel()+1} · Gesamt-Raumlevel ${total}. Jeder Raum levelt einzeln — zieh am Haus, um es zu drehen, und tipp einen Raum an.</p>
+    <div class="house-hint">↔ Ziehen zum Drehen · Tippen zum Öffnen</div>
+    <div class="house-scene" id="house-scene">
+      <div class="house-world" id="house-world">
+        ${ROOMS.map((r,i)=>{
+          const angle=Math.round(i*(360/n));
+          return `<div class="room-cube" style="transform:rotateY(${angle}deg) translateZ(150px);" onclick="handleRoomClick('${r.id}')">
+            <div class="room-face">
+              <img class="room-sprite" src="${getRoomSprite(r)}" alt="">
+              <div class="room-name pix">${r.name}</div>
+              <div class="room-lvl">Lv.${STATE.rooms[r.id]}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="house-controls">
+      <button class="btn small" onclick="rotateHouse(-1)">◀ DREHEN</button>
+      <button class="btn small" onclick="rotateHouse(1)">DREHEN ▶</button>
+    </div>
+    <hr class="divider">
+    ${ROOMS.map(r=>{
+      const lvl=STATE.rooms[r.id]; const cost=roomCost(r.id); const afford=STATE.gold>=cost;
+      return `<div class="card">
+        <div class="row between">
+          <div class="row" style="gap:10px;">
+            <div class="icon-box"><img src="${getRoomSprite(r)}"></div>
+            <div><div class="pix" style="font-size:12px;">${r.name} <span class="badge-lvl">Lv.${lvl}</span></div>
+            <div class="effect-line">${r.effectLabel(lvl)}</div></div>
+          </div>
+        </div>
+        <p class="desc-text">${r.desc}</p>
+        <div class="row between">
+          <span style="font-size:16px;">Ausbau: <b style="color:var(--gold);">${fmt(cost)} 💰</b></span>
+          <button class="btn" ${afford?'':'disabled'} onclick="upgradeRoom('${r.id}')">AUSBAUEN</button>
+        </div>
+      </div>`;
+    }).join('')}
+  `;
+}
+
+/* ---- GACHA ---- */
+function viewGacha(){
+  const bonus=labSsrBonus();
+  const rates={ R:Math.max(0.22,RARITY_RATES.R-bonus*1.2), SR:RARITY_RATES.SR, SSR:RARITY_RATES.SSR+bonus*0.8, UR:RARITY_RATES.UR+bonus*0.4 };
+  const total=Object.values(rates).reduce((a,b)=>a+b,0);
+  let stageHtml;
+  if(!lastPullResults){
+    stageHtml = `<div style="font-size:44px;">🎰</div><p style="color:var(--text-dim); font-size:16px;">Zieh am Hebel deines Schicksals.</p>`;
+  } else if(lastPullResults.length===1){
+    const r=lastPullResults[0];
+    stageHtml = `<div class="reveal-card">
+      <div class="icon-box ${r.char.rarity} reveal-icon-wrap"><img src="${getCharSprite(r.char)}"></div>
+      <div class="reveal-name" style="color:var(--${r.char.rarity.toLowerCase()});">${r.char.name}</div>
+      <span class="rtag ${r.char.rarity}">${r.char.rarity} · ${r.char.klass}</span>
+      <p class="reveal-quote">${r.char.quote}</p>
+      ${r.dupe?`<p class="dupe-tag">Schon vorhanden! Umgewandelt in +${r.bonusGold} 💰</p>`:''}
+    </div>`;
+  } else {
+    stageHtml = `<div class="multi-grid">${lastPullResults.map(r=>`<div class="icon-box ${r.char.rarity}" title="${r.char.name}"><img src="${getCharSprite(r.char)}"></div>`).join('')}</div>
+    <p style="margin-top:10px; font-size:16px; color:var(--text-dim);">10 neue Bekanntschaften mit dem baldigen Tod gemacht.</p>`;
+  }
+  return `
+    <h2 class="panel-title">🎰 Der Verzweiflungs-Automat</h2>
+    <p class="panel-sub">1 Pull = 1 💎 · 10 Pulls = 9 💎. Labor-Level erhöht deine SSR/UR-Chance.</p>
+    <div class="gacha-stage" id="gacha-stage">${stageHtml}</div>
+    <div class="row wrap" style="gap:10px; margin-bottom:16px;">
+      <button class="btn pink" onclick="doPull(1)" ${STATE.gems<1?'disabled':''}>1x ZIEHEN (1💎)</button>
+      <button class="btn gold" onclick="doPull(10)" ${STATE.gems<9?'disabled':''}>10x ZIEHEN (9💎)</button>
+    </div>
+    <div class="card">
+      <div class="pix" style="font-size:11px; margin-bottom:8px; color:var(--text-dim);">DROPRATEN</div>
+      ${RARITY_ORDER.map(rk=>`<div class="row between" style="margin-bottom:4px;"><span class="rtag ${rk}">${rk}</span><span style="font-size:16px;">${(100*rates[rk]/total).toFixed(1)}%</span></div>`).join('')}
+    </div>
+    <hr class="divider">
+    <h3 class="pix" style="font-size:12px; color:var(--text-dim);">SAMMLUNG (${STATE.roster.length}/${CHAR_POOL_FULL.length+1})</h3>
+    <div class="char-grid" style="margin-top:10px;">${STATE.roster.map(m=>charCardMini(m)).join('')}</div>
+  `;
+}
+function charCardMini(m){
+  const def=charDef(m.charId);
+  return `<div class="card" style="padding:8px; text-align:center; cursor:pointer;" onclick="openCharModal('${m.iid}')">
+    <div class="icon-box ${def.rarity}" style="margin:0 auto 6px auto;"><img src="${getCharSprite(def)}"></div>
+    <div style="font-size:15px;">${def.name}</div>
+    <span class="rtag ${def.rarity}">${def.rarity}</span>
+    <div class="badge-lvl" style="margin-top:4px; display:inline-block;">Lv.${m.level}</div>
+  </div>`;
+}
+
+/* ---- DUNGEON ---- */
+function viewDungeon(){
+  return `
+    <h2 class="panel-title">☣️ Dungeon-Terminal</h2>
+    <p class="panel-sub">Wähl dein Team im Tab "TEAM" (max. 3), dann marschiere rein. Jeder Dungeon braucht danach Zeit zum Regenerieren.</p>
+    <div class="card">
+      <div class="pix" style="font-size:11px; margin-bottom:8px;">AKTIVES TEAM</div>
+      <div class="row wrap" style="gap:8px;">
+        ${[0,1,2].map(i=>{
+          const iid=STATE.team[i];
+          if(!iid) return `<div class="team-slot">?</div>`;
+          const m=STATE.roster.find(x=>x.iid===iid);
+          const def=charDef(m.charId);
+          return `<div class="team-slot" title="${def.name}"><img src="${getCharSprite(def)}"></div>`;
+        }).join('')}
+      </div>
+    </div>
+    ${DUNGEONS.map(dg=>{
+      const remain=(STATE.dungeonCooldowns[dg.id]||0)-Date.now();
+      const onCd = remain>0;
+      return `<div class="card">
+        <div class="row between">
+          <div class="row" style="gap:10px;">
+            <div class="icon-box"><img src="${getEnemySprite(dg.id)}"></div>
+            <div><div class="pix" style="font-size:12px;">${dg.name}</div>
+            <div class="effect-line">${dg.diff} · Gegnerstärke ~${dg.power}</div></div>
+          </div>
+        </div>
+        <p class="desc-text">${dg.desc}</p>
+        <p style="font-size:15px; color:var(--text-dim); margin:8px 0;">Gegner: ${dg.enemies.join(', ')}</p>
+        <div class="row between">
+          <span style="font-size:15px;">Beute: ${dg.loot.gold[0]}–${dg.loot.gold[1]} 💰, bis zu ${dg.loot.gems[1]} 💎, Ausrüstungschance ${Math.round(dg.loot.equipChance*100)}%</span>
+        </div>
+        <div class="row between" style="margin-top:8px;">
+          <button class="btn blue" ${(onCd||isAnimating)?'disabled':''} onclick="runDungeon('${dg.id}')">${onCd?'REGENERIERT...':'BETRETEN'}</button>
+          <span class="cooldown-badge" id="cd-${dg.id}" data-was-cd="${onCd?'1':'0'}">${onCd?('Bereit in '+formatTime(remain)):''}</span>
+        </div>
+      </div>`;
+    }).join('')}
+    <h3 class="pix" style="font-size:12px; color:var(--text-dim); margin-top:16px;">EINSATZPROTOKOLL</h3>
+    <div class="log-box" id="log-box">
+      ${STATE.log.length===0 ? '<p>Noch keine Einsätze. Feiges Verhalten wird notiert.</p>' : STATE.log.map(l=>`<p class="${l.cls||''}">${l.msg}</p>`).join('')}
+    </div>
+  `;
+}
+
+/* ---- INVENTAR ---- */
+function viewInventar(){
+  const ps=playerCombatStats();
+  const grouped={};
+  STATE.inventory.forEach(i=>{ grouped[i.itemId]=(grouped[i.itemId]||0)+1; });
+  return `
+    <h2 class="panel-title">🎒 Gerümpel & Gerätschaften</h2>
+    <p class="panel-sub">Werkstatt-Bonus aktiv: +${Math.round((workshopMultiplier()-1)*100)}% Ausrüstungswirkung im Kampf.</p>
+    <div class="card">
+      <div class="pix" style="font-size:12px; margin-bottom:8px;">DEIN AVATAR</div>
+      <div class="row" style="gap:10px;">
+        <div class="icon-box UR"><img src="${getPlayerSprite()}"></div>
+        <div style="flex:1;">
+          <div>ATK <b style="color:var(--danger);">${Math.round(ps.atk)}</b> · DEF <b style="color:var(--sr);">${Math.round(ps.dEf)}</b> · HP <b style="color:var(--success);">${Math.round(ps.hp)}</b></div>
+          <div class="effect-line">Waffe: ${STATE.playerEquip.weapon ? itemDef(STATE.playerEquip.weapon).name : '— leer —'}</div>
+          <div class="effect-line">Rüstung: ${STATE.playerEquip.armor ? itemDef(STATE.playerEquip.armor).name : '— leer —'}</div>
+        </div>
+      </div>
+    </div>
+    <h3 class="pix" style="font-size:11px; color:var(--text-dim); margin:16px 0 8px;">ALLE GEGENSTÄNDE</h3>
+    ${Object.keys(grouped).length===0 ? '<p style="color:var(--text-dim);">Leer. Geh looten.</p>' : ''}
+    ${Object.entries(grouped).map(([itemId,count])=>{
+      const def=itemDef(itemId);
+      const equippedCount=STATE.inventory.filter(i=>i.itemId===itemId && i.equippedTo).length;
+      const freeInstance=STATE.inventory.find(i=>i.itemId===itemId && !i.equippedTo);
+      return `<div class="card">
+        <div class="row between">
+          <div class="row" style="gap:10px;">
+            <div class="icon-box ${def.rarity}"><img src="${getItemSprite(def)}"></div>
+            <div>
+              <div style="font-size:16px;">${def.name} ${count>1?`<span class="badge-lvl">x${count}</span>`:''}</div>
+              <span class="rtag ${def.rarity}">${def.rarity}</span>
+              <span class="effect-line" style="margin-left:6px; display:inline;">${def.type==='weapon' ? '+'+def.bonus.atk+' ATK' : '+'+def.bonus.def+' DEF'}</span>
+            </div>
+          </div>
+        </div>
+        <p class="desc-text">${def.desc}</p>
+        <div class="row wrap" style="gap:6px; margin-top:8px;">
+          <select class="eq-select" id="target-${itemId}">
+            <option value="player">→ Dir selbst</option>
+            ${STATE.roster.map(m=>`<option value="${m.iid}">→ ${charDef(m.charId).name}</option>`).join('')}
+          </select>
+          <button class="btn small blue" ${freeInstance?'':'disabled'} onclick="equipFromSelect('${itemId}')">AUSRÜSTEN</button>
+        </div>
+        ${equippedCount>0 ? `<p class="effect-line" style="margin-top:6px;">Ausgerüstet: ${equippedCount}x</p>` : ''}
+      </div>`;
+    }).join('')}
+
+    <hr class="divider">
+    <h3 class="pix" style="font-size:11px; color:var(--text-dim); margin:16px 0 8px;">🛠️ WERKSTATT-CRAFTING</h3>
+    <p class="panel-sub">Monster-Drops aus Dungeons zu exklusiver Ausrüstung verarbeiten — gibt's nirgendwo als Direkt-Drop.</p>
+    <div class="card">
+      <div class="pix" style="font-size:10px; margin-bottom:8px; color:var(--text-dim);">DEINE MATERIALIEN</div>
+      <div class="row wrap" style="gap:10px;">
+        ${Object.keys(MATERIALS).map(mid=>{
+          const count=STATE.materials[mid]||0;
+          return `<div style="text-align:center; width:52px;" title="${MATERIALS[mid].desc}">
+            <div class="icon-box" style="width:44px; height:44px; margin:0 auto;"><img src="${getMaterialSprite(mid)}"></div>
+            <div style="font-size:13px; color:${count>0?'var(--text)':'var(--text-dim)'};">${count}x</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    ${CRAFT_RECIPES.map(r=>{
+      const ok=canCraft(r);
+      return `<div class="card">
+        <div class="pix" style="font-size:11px; margin-bottom:4px;">${r.name}</div>
+        <p class="desc-text">${r.desc}</p>
+        <div class="row wrap" style="gap:8px; margin:6px 0;">
+          ${Object.entries(r.mats).map(([mid,qty])=>{
+            const have=STATE.materials[mid]||0;
+            return `<div style="text-align:center; width:40px;">
+              <div class="icon-box" style="width:34px; height:34px; margin:0 auto;"><img src="${getMaterialSprite(mid)}"></div>
+              <div style="font-size:12px; color:${have>=qty?'var(--success)':'var(--danger)'};">${have}/${qty}</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="row between">
+          <span style="font-size:15px;">Kosten: <b style="color:var(--gold);">${r.cost.gold||0} 💰</b>${r.result?' → '+itemDef(r.result).name:' → Veredelung'}</span>
+          <button class="btn small gold" ${ok?'':'disabled'} onclick="craftRecipe('${r.id}')">CRAFTEN</button>
+        </div>
+      </div>`;
+    }).join('')}
+  `;
+}
+
+/* ---- CHARAKTERE / TEAM ---- */
+function viewCharaktere(){
+  return `
+    <h2 class="panel-title">👥 Truppenverwaltung</h2>
+    <p class="panel-sub">Wähl bis zu 3 Team-Mitglieder für Dungeons. Tipp eine Karte an für Details, trainiere mit Gold.</p>
+    <div class="card">
+      <div class="pix" style="font-size:11px; margin-bottom:8px;">AKTIVES TEAM (${STATE.team.length}/3)</div>
+      <div class="pick-list">
+        ${STATE.roster.map(m=>{
+          const def=charDef(m.charId); const sel=STATE.team.includes(m.iid);
+          return `<div class="pick-chip ${sel?'selected':''}" onclick="toggleTeam('${m.iid}')" title="${def.name}"><img src="${getCharSprite(def)}"></div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="char-grid" style="margin-top:12px;">
+      ${STATE.roster.map(m=>{
+        const def=charDef(m.charId); const s=memberCombatStats(m);
+        const cost=Math.round(22*Math.pow(m.level,1.6));
+        const eq=STATE.inventory.find(i=>i.equippedTo===m.iid);
+        return `<div class="card" style="cursor:pointer;" onclick="openCharModal('${m.iid}')">
+          <div class="row" style="gap:8px;">
+            <div class="icon-box ${def.rarity}"><img src="${getCharSprite(def)}"></div>
+            <div style="flex:1;">
+              <div style="font-size:15px;">${def.name}</div>
+              <span class="rtag ${def.rarity}">${def.rarity}</span>
+              <span class="badge-lvl" style="margin-left:4px;">Lv.${m.level}</span>
+            </div>
+          </div>
+          <p style="font-size:14px; color:var(--text-dim); font-style:italic; margin:6px 0;">${def.role} · ${def.klass}</p>
+          <div class="bar hp"><div style="width:${Math.min(100,s.hp/2)}%;"></div></div>
+          <div class="bar atk"><div style="width:${Math.min(100,s.atk*1.5)}%;"></div></div>
+          <div class="bar def"><div style="width:${Math.min(100,s.dEf*2.5)}%;"></div></div>
+          <p class="effect-line" style="margin-top:4px;">ATK ${Math.round(s.atk)} · DEF ${Math.round(s.dEf)} · HP ${Math.round(s.hp)}</p>
+          ${eq ? `<p class="effect-line">Ausgerüstet: ${itemDef(eq.itemId).name}</p>` : ''}
+          <button class="btn small gold" style="margin-top:8px;" ${STATE.gold<cost?'disabled':''} onclick="event.stopPropagation(); levelUpChar('${m.iid}')">TRAINIEREN (${fmt(cost)}💰)</button>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+
+/* ---------------- SERVICE WORKER (Offline-PWA) ---------------- */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+
+/* ---------------- INIT ---------------- */
+renderAll();
+</script>
+</body>
+</html>
