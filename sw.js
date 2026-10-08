@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wasteland-waifus-v1';
+const CACHE_NAME = 'wasteland-waifus-v3';
 const ASSETS = [
   './',
   './index.html',

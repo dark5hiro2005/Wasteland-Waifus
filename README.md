@@ -1,5 +1,10 @@
 # Wasteland Waifus – GitHub Pages Deployment
 
+**Stand dieser Version:** 4er-Hauptnavigation (Haus/Kampf/Gacha/Helden) im AFK-Arena-Stil, AFK-Idle-Belohnungen
+(jetzt 24h Cap) + Online-Bonus (läuft live weiter, solange der Tab offen bleibt — auch im Hintergrund,
+während du woanders zockst), 217 Charaktere mit klassenspezifischen Spezialfähigkeiten, Turm-Modus bis
+Etage 100, Fusion-System, Charakter-Designer, gestiegene Raum- und Gacha-Kosten für längere Progression.
+
 Dieser Ordner enthält alles fertig für GitHub Pages:
 
 ```
